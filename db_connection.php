@@ -2,7 +2,7 @@
 // Database connection parameters
 $db_host = "localhost";             // Host name
 $db_user = "root";                  // Database username
-$db_pass = "Mar262002!";            // Database password
+$db_pass = "";                      // Database password // change this to your password if you have set one
 $db_name = "kapekada";              // Database name
 
 // Establishing connection to the database
