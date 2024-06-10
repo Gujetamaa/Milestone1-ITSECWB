@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     if (is_banned()) {
-        $message = "You have been banned for 5 minutes due to multiple failed login attempts. Please try again later.";
+        $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
     } else {
         // Query to fetch user data based on email
         $sql = "SELECT * FROM users WHERE email='$email'";
@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if ($_SESSION['login_attempts'] >= 3) {
                     $_SESSION['ban_time'] = time() + 300; // Ban for 5 minutes
-                    $message = "You have been banned for 5 minutes due to multiple failed login attempts. Please try again later.";
+                    $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
                 } else {
                     //$message = "Incorrect password. Attempt: " . $_SESSION['login_attempts'] . ". Please try again.";
                     $message = "Incorrect password. Please try again.";
