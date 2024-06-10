@@ -8,20 +8,18 @@ include 'db_connection.php';
 $message = ""; // Initialize the message variable
 
 // Function to check if the user is banned
-function is_banned() {
-    if (isset($_SESSION['ban_time']) && $_SESSION['ban_time'] > time()) {
-        return true;
+function is_banned($email) {
+    global $conn;
+    $sql = "SELECT ban_time FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
+    if ($result && mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        if ($user['ban_time'] > time()) {
+            return true;
+        }
     }
     return false;
 }
-
-/*
-// Reset login attempts if page is refreshed
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    unset($_SESSION['login_attempts']);
-    unset($_SESSION['first_attempt_time']);
-    unset($_SESSION['ban_time']);
-}*/
 
 // Check if the user is already logged in and redirect based on their role
 if (isset($_SESSION['role'])) {
@@ -38,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    if (is_banned()) {
+    if (is_banned($email)) {
         $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
     } else {
         // Query to fetch user data based on email
@@ -49,10 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = mysqli_fetch_assoc($result);
             // Verify hashed password
             if (password_verify($password, $user['password'])) {
-                // Reset login attempts on successful login
-                unset($_SESSION['login_attempts']);
-                unset($_SESSION['first_attempt_time']);
-                unset($_SESSION['ban_time']);
+                // Reset login attempts and ban time on successful login
+                $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
+                mysqli_query($conn, $sql);
 
                 if ($user['role'] == 'Administrator') {
                     $message = "Welcome back, " . $user['fullname'] . "! You are logged in as an Administrator. Redirecting...";
@@ -75,19 +72,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             } else {
                 // Increment login attempts
-                if (!isset($_SESSION['login_attempts'])) {
-                    $_SESSION['login_attempts'] = 1;
-                    $_SESSION['first_attempt_time'] = time();
-                } else {
-                    $_SESSION['login_attempts'] += 1;
-                }
+                $login_attempts = $user['login_attempts'] + 1;
+                $sql = "UPDATE users SET login_attempts = $login_attempts WHERE email='$email'";
+                mysqli_query($conn, $sql);
 
-                if ($_SESSION['login_attempts'] >= 3) {
-                    $_SESSION['ban_time'] = time() + 300; // Ban for 5 minutes
+                if ($login_attempts >= 3) {
+                    $ban_time = time() + 60; // Ban for 5 minutes
+                    $sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
+                    mysqli_query($conn, $sql);
                     $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
                 } else {
-                    //$message = "Incorrect password. Attempt: " . $_SESSION['login_attempts'] . ". Please try again.";
-                    $message = "Incorrect password. Please try again.";
+                    $message = "Incorrect password. Attempt: " . $login_attempts . ". Please try again.";
                 }
             }
         } else {
