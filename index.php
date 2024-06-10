@@ -77,12 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 mysqli_query($conn, $sql);
 
                 if ($login_attempts >= 3) {
-                    $ban_time = time() + 60; // Ban for 5 minutes
+                    $ban_time = time() + 300; // Ban for 5 minutes
                     $sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
                     mysqli_query($conn, $sql);
                     $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
                 } else {
-                    $message = "Incorrect password. Attempt: " . $login_attempts . ". Please try again.";
+                    $message = "Incorrect password. Please try again.";
                 }
             }
         } else {

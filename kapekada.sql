@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 10, 2024 at 04:45 PM
+-- Generation Time: Jun 10, 2024 at 05:00 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -163,12 +163,7 @@ INSERT INTO `users` (`id`, `fullname`, `email`, `phoneNumber`, `password`, `role
 (54, 'Jane Smith', 'jane.smith@example.com', '5551234567', 'password456', 'User', 50.00, '789 Maple Avenue', NULL, NULL, NULL),
 (101, 'Michael Johnson', 'michael.johnson@example.com', '1112223333', 'password789', 'User', 200.00, '101 Pine Road', NULL, NULL, NULL),
 (102, 'tin', 'just.annerosete@gmail.com', '09176860046', '$2y$10$U4q.bDU/HBW.UYHsAwRVweRF7oUM6YHOTvA6/86wtsuDP0OTZTaB6', 'User', 100.01, '1724 Taft Avenue Pasay City', '', 0, NULL),
-(104, 'admintest', 'admin.example@gmail.com', '09176860046', '$2y$10$f2xvkeQqOyvr9UcL3mdy2O3GYgyUQOWIAe5IAy5GS5RtEmEbg2A2.', 'Administrator', 0.03, '1724 Taft Avenue Pasay City', NULL, 0, NULL),
-(105, 'taylor swift', 'tay@gmail.com', '09176860046', '$2y$10$lo8D0M31Zc2zbZNxhwV2W.lLL2xpLsF.ya2dcWxkgvsymm06hSC8G', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
-(106, 'justine', 'justine@gmail.com', '09176860046', '$2y$10$Tct7GnljwKcjOxFVmUMOWOuwqQNWNOf0Yub287qCLyrymOBsAByYG', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
-(107, 'justine', 'justine+rosete@gmail.com', '09176860046', '$2y$10$GL0MkmLEwT1Z4/hwD6MsbuRuth/hsOtVlKhGYMAapzvaMwVznIBNe', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
-(108, 'justine', 'justinerosete@gmail.com', '09176860046', '$2y$10$MqesCER9lavPjrkns0RFUecxotbM18l3y1fOy.LCkwWK6ux7GK66.', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
-(109, 'justine', 'just.annerosete@gmail.com', '09176860046', '$2y$10$bfUZqlYC7cNjbcsOFBYRP.WN6nO1ggWA3henoogCnnc47ztltlGC6', 'User', 10.00, '1724 Taft Avenue Pasay City', NULL, 0, NULL);
+(104, 'admintest', 'admin.example@gmail.com', '09176860046', '$2y$10$f2xvkeQqOyvr9UcL3mdy2O3GYgyUQOWIAe5IAy5GS5RtEmEbg2A2.', 'Administrator', 0.03, '1724 Taft Avenue Pasay City', NULL, 0, NULL);
 
 --
 -- Indexes for dumped tables
