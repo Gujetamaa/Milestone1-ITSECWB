@@ -1,3 +1,15 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in and has the appropriate role
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'User') {
+    // Redirect to the login page
+    header("Location: index.php");
+    exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,7 +85,6 @@
     // Timeout duration in milliseconds (15 minutes)
     const timeoutDuration = 15 * 60 * 1000;
 
-    
     let logoutTimer;
 
     function resetLogoutTimer() {

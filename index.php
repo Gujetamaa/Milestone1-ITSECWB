@@ -15,11 +15,23 @@ function is_banned() {
     return false;
 }
 
+/*
 // Reset login attempts if page is refreshed
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     unset($_SESSION['login_attempts']);
     unset($_SESSION['first_attempt_time']);
     unset($_SESSION['ban_time']);
+}*/
+
+// Check if the user is already logged in and redirect based on their role
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'Administrator') {
+        header("Location: admin.php");
+        exit();
+    } else if ($_SESSION['role'] == 'User') {
+        header("Location: user.php");
+        exit();
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -74,7 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['ban_time'] = time() + 300; // Ban for 5 minutes
                     $message = "You have been banned for 5 minutes due to multiple failed login attempts. Please try again later.";
                 } else {
-                    $message = "Incorrect password. Attempt: " . $_SESSION['login_attempts'] . ". Please try again.";
+                    //$message = "Incorrect password. Attempt: " . $_SESSION['login_attempts'] . ". Please try again.";
+                    $message = "Incorrect password. Please try again.";
                 }
             }
         } else {
