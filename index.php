@@ -1,48 +1,102 @@
 <?php 
+// Start the session
+session_start();
+
 // Include database connection
 include 'db_connection.php';
 
 $message = ""; // Initialize the message variable
 
+// Function to check if the user is banned
+function is_banned() {
+    if (isset($_SESSION['ban_time']) && $_SESSION['ban_time'] > time()) {
+        return true;
+    }
+    return false;
+}
+
+/*
+// Reset login attempts if page is refreshed
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    unset($_SESSION['login_attempts']);
+    unset($_SESSION['first_attempt_time']);
+    unset($_SESSION['ban_time']);
+}*/
+
+// Check if the user is already logged in and redirect based on their role
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'Administrator') {
+        header("Location: admin.php");
+        exit();
+    } else if ($_SESSION['role'] == 'User') {
+        header("Location: user.php");
+        exit();
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Query to fetch user data based on email
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $sql);
+    if (is_banned()) {
+        $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
+    } else {
+        // Query to fetch user data based on email
+        $sql = "SELECT * FROM users WHERE email='$email'";
+        $result = mysqli_query($conn, $sql);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        // Verify hashed password
-        if (password_verify($password, $user['password'])) {
-            if ($user['role'] == 'Administrator') {
-                $message = "Welcome back, " . $user['fullname'] . "! You are logged in as an Administrator. Redirecting...";
-                // Set session variables after successful login
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['fullname'] = $user['fullname'];
-                $_SESSION['role'] = 'Administrator';
-                // Redirect to admin.php after 4 seconds
-                echo '<meta http-equiv="refresh" content="4;url=admin.php">';
-            } else if ($user['role'] == 'User') {
-                $message = "Welcome back, " . $user['fullname'] . "! You are logged in as a User. Redirecting...";
-                // Set session variables after successful login
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['fullname'] = $user['fullname'];
-                $_SESSION['role'] = 'User';
-                // Redirect to index.php after 4 seconds
-                echo '<meta http-equiv="refresh" content="4;url=user.php">';
+        if ($result && mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
+            // Verify hashed password
+            if (password_verify($password, $user['password'])) {
+                // Reset login attempts on successful login
+                unset($_SESSION['login_attempts']);
+                unset($_SESSION['first_attempt_time']);
+                unset($_SESSION['ban_time']);
+
+                if ($user['role'] == 'Administrator') {
+                    $message = "Welcome back, " . $user['fullname'] . "! You are logged in as an Administrator. Redirecting...";
+                    // Set session variables after successful login
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['fullname'] = $user['fullname'];
+                    $_SESSION['role'] = 'Administrator';
+                    // Redirect to admin.php after 4 seconds
+                    echo '<meta http-equiv="refresh" content="4;url=admin.php">';
+                } else if ($user['role'] == 'User') {
+                    $message = "Welcome back, " . $user['fullname'] . "! You are logged in as a User. Redirecting...";
+                    // Set session variables after successful login
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['fullname'] = $user['fullname'];
+                    $_SESSION['role'] = 'User';
+                    // Redirect to index.php after 4 seconds
+                    echo '<meta http-equiv="refresh" content="4;url=user.php">';
+                } else {
+                    $message = "Unknown user role. Please contact the administrator.";
+                }
             } else {
-                $message = "Unknown user role. Please contact the administrator.";
+                // Increment login attempts
+                if (!isset($_SESSION['login_attempts'])) {
+                    $_SESSION['login_attempts'] = 1;
+                    $_SESSION['first_attempt_time'] = time();
+                } else {
+                    $_SESSION['login_attempts'] += 1;
+                }
+
+                if ($_SESSION['login_attempts'] >= 3) {
+                    $_SESSION['ban_time'] = time() + 300; // Ban for 5 minutes
+                    $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
+                } else {
+                    //$message = "Incorrect password. Attempt: " . $_SESSION['login_attempts'] . ". Please try again.";
+                    $message = "Incorrect password. Please try again.";
+                }
             }
         } else {
-            $message = "Incorrect password. Please try again.";
+            $message = "No user found with this email. Please sign up.";
         }
-    } else {
-        $message = "No user found with this email. Please sign up.";
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -171,3 +225,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

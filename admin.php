@@ -1,3 +1,16 @@
+<?php
+// Start the session
+session_start();
+
+// Check if the user is logged in and has the appropriate role
+if (!isset($_SESSION['email']) || $_SESSION['role'] != 'Administrator') {
+    // Redirect to the login page
+    header("Location: index.php");
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,5 +82,26 @@
     </form>
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Timeout duration in milliseconds (15 minutes)
+    const timeoutDuration = 15 * 60 * 1000;
+
+    let logoutTimer;
+
+    function resetLogoutTimer() {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(() => {
+            // Redirect to logout page when timeout occurs
+            window.location.href = "logout.php";
+        }, timeoutDuration);
+    }
+
+    // Reset timer on user activity
+    document.addEventListener("mousemove", resetLogoutTimer);
+    document.addEventListener("keypress", resetLogoutTimer);
+
+    // Initial setup of the timer
+    resetLogoutTimer();
+</script>
 </body>
 </html>
