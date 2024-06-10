@@ -73,6 +73,7 @@
     // Timeout duration in milliseconds (15 minutes)
     const timeoutDuration = 15 * 60 * 1000;
 
+    
     let logoutTimer;
 
     function resetLogoutTimer() {
