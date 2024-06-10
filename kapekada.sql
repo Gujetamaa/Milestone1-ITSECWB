@@ -183,6 +183,7 @@ ALTER TABLE `orders`
 ALTER TABLE `promotions`
   ADD PRIMARY KEY (`id`);
 
+
 --
 -- AUTO_INCREMENT for dumped tables
 --
