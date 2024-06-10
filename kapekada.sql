@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 27, 2024 at 05:24 AM
+-- Host: localhost
+-- Generation Time: Jun 10, 2024 at 04:45 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -140,7 +140,7 @@ INSERT INTO `promotions` (`id`, `name`, `description`, `price`, `start_date`, `e
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `fullname` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phoneNumber` varchar(255) NOT NULL,
@@ -148,18 +148,27 @@ CREATE TABLE `users` (
   `role` varchar(255) NOT NULL,
   `wallet` decimal(10,2) DEFAULT 0.00,
   `address` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`)
+  `picture` varchar(255) DEFAULT NULL,
+  `login_attempts` int(11) DEFAULT NULL,
+  `ban_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullname`, `email`, `phoneNumber`, `password`, `role`, `wallet`, `address`) VALUES
-    (1, 'Administrator', 'admin@example.com', 1234567890, 'admin', 'Administrator', 500.00, '123 Admin Street'),
-    (2, 'John Doe', 'john.doe@example.com', 9876543210, 'password123', 'User', 100.00, '456 Oak Street'),
-    (54, 'Jane Smith', 'jane.smith@example.com', 5551234567, 'password456', 'User', 50.00, '789 Maple Avenue'),
-    (101, 'Michael Johnson', 'michael.johnson@example.com', 1112223333, 'password789', 'User', 200.00, '101 Pine Road');
+INSERT INTO `users` (`id`, `fullname`, `email`, `phoneNumber`, `password`, `role`, `wallet`, `address`, `picture`, `login_attempts`, `ban_time`) VALUES
+(1, 'Administrator', 'admin@example.com', '1234567890', 'admin', 'Administrator', 500.00, '123 Admin Street', NULL, NULL, NULL),
+(2, 'John Doe', 'john.doe@example.com', '9876543210', 'password123', 'User', 100.00, '456 Oak Street', NULL, NULL, NULL),
+(54, 'Jane Smith', 'jane.smith@example.com', '5551234567', 'password456', 'User', 50.00, '789 Maple Avenue', NULL, NULL, NULL),
+(101, 'Michael Johnson', 'michael.johnson@example.com', '1112223333', 'password789', 'User', 200.00, '101 Pine Road', NULL, NULL, NULL),
+(102, 'tin', 'just.annerosete@gmail.com', '09176860046', '$2y$10$U4q.bDU/HBW.UYHsAwRVweRF7oUM6YHOTvA6/86wtsuDP0OTZTaB6', 'User', 100.01, '1724 Taft Avenue Pasay City', '', 0, NULL),
+(104, 'admintest', 'admin.example@gmail.com', '09176860046', '$2y$10$f2xvkeQqOyvr9UcL3mdy2O3GYgyUQOWIAe5IAy5GS5RtEmEbg2A2.', 'Administrator', 0.03, '1724 Taft Avenue Pasay City', NULL, 0, NULL),
+(105, 'taylor swift', 'tay@gmail.com', '09176860046', '$2y$10$lo8D0M31Zc2zbZNxhwV2W.lLL2xpLsF.ya2dcWxkgvsymm06hSC8G', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
+(106, 'justine', 'justine@gmail.com', '09176860046', '$2y$10$Tct7GnljwKcjOxFVmUMOWOuwqQNWNOf0Yub287qCLyrymOBsAByYG', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
+(107, 'justine', 'justine+rosete@gmail.com', '09176860046', '$2y$10$GL0MkmLEwT1Z4/hwD6MsbuRuth/hsOtVlKhGYMAapzvaMwVznIBNe', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
+(108, 'justine', 'justinerosete@gmail.com', '09176860046', '$2y$10$MqesCER9lavPjrkns0RFUecxotbM18l3y1fOy.LCkwWK6ux7GK66.', 'User', 100.00, '1724 Taft Avenue Pasay City', NULL, NULL, NULL),
+(109, 'justine', 'just.annerosete@gmail.com', '09176860046', '$2y$10$bfUZqlYC7cNjbcsOFBYRP.WN6nO1ggWA3henoogCnnc47ztltlGC6', 'User', 10.00, '1724 Taft Avenue Pasay City', NULL, 0, NULL);
 
 --
 -- Indexes for dumped tables
@@ -184,26 +193,20 @@ ALTER TABLE `promotions`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `menu_items`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `menu_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
-
---
--- AUTO_INCREMENT for table `orders`
---
-ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `promotions`
---
-ALTER TABLE `promotions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
