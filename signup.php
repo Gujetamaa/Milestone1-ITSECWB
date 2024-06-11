@@ -44,11 +44,6 @@ function isValidEmail($email) {
         return false;
     }
 
-    // Check if the domain has a valid MX or A record
-    if (!checkdnsrr($domain, 'MX') && !checkdnsrr($domain, 'A')) {
-        return false;
-    }
-
     return true;
 }
 
@@ -272,7 +267,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name"> <!-- Add name attribute -->
                 </div>
                 <div class="form-group">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" > <!-- Add name attribute -->
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" > <!-- Add name attribute -->
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" id="password" name="password" placeholder="Password"> <!-- Add name attribute -->
