@@ -6,6 +6,17 @@ session_start(); // Start session
 
 $message = ""; // Initialize the message variable
 
+// Check if the user is already logged in and redirect based on their role
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'Administrator') {
+        header("Location: admin.php");
+        exit();
+    } else if ($_SESSION['role'] == 'User') {
+        header("Location: user.php");
+        exit();
+    }
+}
+
 function isValidEmail($email) {
     // Check for the presence of one "@" symbol
     if (substr_count($email, '@') !== 1) {
