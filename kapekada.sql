@@ -148,7 +148,7 @@ CREATE TABLE `users` (
   `role` varchar(255) NOT NULL,
   `wallet` decimal(10,2) DEFAULT 0.00,
   `address` varchar(255) DEFAULT NULL,
-  `picture` varchar(255) DEFAULT NULL,
+  `picture` varchar(255) NOT NULL,
   `login_attempts` int(11) DEFAULT NULL,
   `ban_time` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

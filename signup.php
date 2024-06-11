@@ -1,5 +1,4 @@
 
-
 <?php
 // Include database connection
 include 'db_connection.php';
@@ -72,11 +71,6 @@ function isValidPhoneNumber($phoneNumber) {
     return true;
 }
 
-include 'db_connection.php';    
-
-$message = ""; // Initialize the message variable
-
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
@@ -87,12 +81,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = isset($_POST['address']) ? $_POST['address'] : null; // Get address if provided
     $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : 0.00; // Get wallet balance if provided
     $picture = null; // Initialize picture variable
+    
+    $uploadOk = 1; // Flag to check upload success
     $targetDir = "uploads/";
     $targetFile = $targetDir.basename($_FILES['profile']['name']);
-    $uploadSuccess = move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile);
-    if ($uploadSuccess) {
-        $picture = $targetFile;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // Check if the uploaded file is an image
+    if (isset($_FILES['profile']) && $_FILES['profile']['error'] == UPLOAD_ERR_OK) {
+        $check = getimagesize($_FILES['profile']['tmp_name']);
+        if ($check !== false) {
+            $message =  "File is an image - " . $check['mime'] . ".";
+        } else {
+            $message =  "File is not an image.";
+            $uploadOk = 0;
+        }
+
+        // Check file size (e.g., limit to 5MB)
+        if ($_FILES['profile']['size'] > 5000000) {
+            $message =  "Your file is too large.";
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        $allowedFileTypes = ['jpg', 'jpeg', 'png'];
+        if (!in_array($imageFileType, $allowedFileTypes)) {
+            $message =  "Only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 1) {
+            if (move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile)) {
+                $picture = $targetFile; // Set $picture to the path of the uploaded file
+            } else {
+                $message =  "Sorry, there was an error uploading your file.";
+            }
+        }
+    } else {
+        echo "No file uploaded or upload error.";
     }
+
     
 
     if (!isValidEmail($email)) {
@@ -109,24 +138,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "Invalid phone number. Please enter a valid phone number";
     }
     else{
-    // Hash the password with salted rounds
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    // Insert user data into the database with hashed password
-    $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address,picture)VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address','$picture')";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        $message = "Welcome, $fullname! Registration successful. Redirecting...";
-        // Set session variables after successful registration
-        $_SESSION['email'] = $email;
-        $_SESSION['fullname'] = $fullname;
-        $_SESSION['role'] = $role;
-        // Redirect to index.php after 4 seconds
-        echo '<meta http-equiv="refresh" content="4;url=index.php">';
-    } else {
-        $message = "Error: " . mysqli_error($conn);
-    }
+        if ($uploadOk == 1) {
+            // Hash the password with salted rounds
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+            // Insert user data into the database with hashed password
+            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
+                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
+    
+            $result = mysqli_query($conn, $sql);
+    
+            if ($result) {
+                $message = "Welcome, $fullname! Registration successful. Redirecting...";
+                // Set session variables after successful registration
+                $_SESSION['email'] = $email;
+                $_SESSION['fullname'] = $fullname;
+                $_SESSION['role'] = $role;
+                // Redirect to index.php after 4 seconds
+                echo '<meta http-equiv="refresh" content="4;url=index.php">';
+            } else {
+                $message = "Error: " . mysqli_error($conn);
+            }
+        }
  }
 }
 
