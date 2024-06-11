@@ -1,43 +1,4 @@
 
-<?php
-/*
-// Include database connection
-include 'db_connection.php';
-
-$message = ""; // Initialize the message variable
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $phoneNumber = $_POST['phoneNumber']; // Get phone number
-    $role = 'User'; // Default role for signed up users
-    $address = isset($_POST['address']) ? $_POST['address'] : null; // Get address if provided
-    $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : 0.00; // Get wallet balance if provided
-
-    // Hash the password with salted rounds
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    // Insert user data into the database with hashed password
-    $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address) VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address')";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        $message = "Welcome, $fullname! Registration successful. Redirecting...";
-        // Set session variables after successful registration
-        $_SESSION['email'] = $email;
-        $_SESSION['fullname'] = $fullname;
-        $_SESSION['role'] = $role;
-        // Redirect to index.php after 4 seconds
-        echo '<meta http-equiv="refresh" content="4;url=index.php">';
-    } else {
-        $message = "Error: " . mysqli_error($conn);
-    }
-}
-*/
-?>
-
-
 
 <?php
 // Include database connection
@@ -80,23 +41,34 @@ function isValidEmail($email) {
 
     return true;
 }
+
 function isValidPhoneNumber($phoneNumber) {
-   
-    // Check if the phone number has exactly 11 digits
-    if (strlen($phoneNumber) !== 11) {
-        return false;
+    // Check if the phone number starts with "+63"
+    if (substr($phoneNumber, 0, 3) === "+63") {
+        // Remove "+63" prefix for further validation
+        $phoneNumber = substr($phoneNumber, 3);
+
+        // Check if the remaining phone number has exactly 10 digits
+        if (strlen($phoneNumber) !== 10) {
+            return false;
+        }
+    } else {
+        // Check if the phone number starts with "09"
+        if (substr($phoneNumber, 0, 2) !== "09") {
+            return false;
+        }
+
+        // Check if the phone number has exactly 11 digits
+        if (strlen($phoneNumber) !== 11) {
+            return false;
+        }
     }
 
-     // Check if the phone number starts with "09"
-     if (substr($phoneNumber, 0, 2) !== "09") {
-        return false;
-    }
-
-    // Check if the phone number contains only numeric digits
+    // Check if the remaining phone number contains only numeric digits
     if (!ctype_digit($phoneNumber)) {
         return false;
     }
-    
+
     return true;
 }
 
