@@ -72,6 +72,10 @@ function isValidPhoneNumber($phoneNumber) {
     return true;
 }
 
+include 'db_connection.php';    
+
+$message = ""; // Initialize the message variable
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -82,6 +86,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $role = 'User'; // Default role for signed up users
     $address = isset($_POST['address']) ? $_POST['address'] : null; // Get address if provided
     $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : 0.00; // Get wallet balance if provided
+    $picture = null; // Initialize picture variable
+    $targetDir = "uploads/";
+    $targetFile = $targetDir.basename($_FILES['profile']['name']);
+    $uploadSuccess = move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile);
+    if ($uploadSuccess) {
+        $picture = $targetFile;
+    }
+    
 
     if (!isValidEmail($email)) {
 
@@ -91,10 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         else {
         $message = "Invalid email address. Please enter a valid email.";
         } 
-        /*
-        OR 
-          $message = "Invalid email address. Please enter a valid email.";
-        */
+       
     }
     elseif (!isValidPhoneNumber($phoneNumber)) {
         $message = "Invalid phone number. Please enter a valid phone number";
@@ -104,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Insert user data into the database with hashed password
-    $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address) VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address')";
+    $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address,picture)VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address','$picture')";
     $result = mysqli_query($conn, $sql);
 
     if ($result) {
@@ -213,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container signup-container">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form class="signup-form" method="post" action="signup.php">
+            <form class="signup-form" method="post" action="signup.php" enctype="multipart/form-data">
                 <h2 class="signup-title">Sign Up</h2>
                 <div class="form-group">
                     <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name"> <!-- Add name attribute -->
@@ -233,12 +242,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                     <input type="number" step="0.01" class="form-control" id="wallet" name="wallet" placeholder="Wallet Balance"> <!-- Add wallet balance field -->
                 </div>
-                <button type="submit" class="btn btn-block btn-signup">Sign Up</button>
+                <div class = "form-group">
+                    <input type="file" class="form-control" id="profile" name="profile" placeholder="Upload Your Profile Pic" accept="image/*">
+                </div>
                 <div class="login-link">
                     <a href="index.php">Already have an account?</a>
                 </div>
-            </form>
-        </div>
+                <button type="submit" class="btn btn-block btn-signup">Sign Up</button>
+                
+            </form> 
     </div>
 </div>
 
