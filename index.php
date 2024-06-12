@@ -10,7 +10,9 @@ $message = ""; // Initialize the message variable
 // Function to check if the user is banned
 function is_banned($email) {
     global $conn;
-    $sql = "SELECT ban_time FROM users WHERE email='$email'";
+    //$sql = "SELECT ban_time FROM users WHERE email='$email'";
+    $sql = "SELECT ban_time FROM users WHERE BINARY email='$email'";
+
     $result = mysqli_query($conn, $sql);
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
@@ -24,7 +26,9 @@ function is_banned($email) {
 // Function to check if ban time has expired
 function is_ban_time_expired($email) {
     global $conn;
-    $sql = "SELECT ban_time FROM users WHERE email='$email'";
+    //$sql = "SELECT ban_time FROM users WHERE email='$email'";
+    $sql = "SELECT ban_time FROM users WHERE BINARY email='$email'";
+
     $result = mysqli_query($conn, $sql);
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
@@ -53,12 +57,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if ban time has expired
     if (is_ban_time_expired($email)) {
         // Reset login attempts and ban time
-        $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
+        //$sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
+        $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE BINARY email='$email'";
+
         mysqli_query($conn, $sql);
     }
 
     // Query to fetch user data based on email
-    $sql = "SELECT * FROM users WHERE email='$email'";
+    //$sql = "SELECT * FROM users WHERE email='$email'";
+    $sql = "SELECT * FROM users WHERE BINARY email='$email'";
+
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -69,7 +77,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
 
         // Update login attempts
-        $sql = "UPDATE users SET login_attempts = $login_attempts WHERE email='$email'";
+        //$sql = "UPDATE users SET login_attempts = $login_attempts WHERE email='$email'";
+        $sql = "UPDATE users SET login_attempts = $login_attempts WHERE BINARY email='$email'";
+        
         mysqli_query($conn, $sql);
 
         if (is_banned($email)) {
@@ -82,7 +92,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Verify hashed password
             if (password_verify($password, $user['password'])) {
                 // Reset login attempts and ban time on successful login
-                $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
+                //$sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
+                $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE BINARY email='$email'";
+
                 mysqli_query($conn, $sql);
 
                 if ($user['role'] == 'Administrator') {
@@ -107,7 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 if ($login_attempts >= 3) {
                     $ban_time = time() + 300; // Ban for 5 minutes
-                    $sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
+                    //$sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
+                    $sql = "UPDATE users SET ban_time = $ban_time WHERE BINARY email='$email'";
                     mysqli_query($conn, $sql);
                     
                     $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
