@@ -1,4 +1,3 @@
-
 <?php
 // Include database connection
 include 'db_connection.php';
@@ -77,7 +76,6 @@ function isValidPhoneNumber($phoneNumber) {
     return true;
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
@@ -97,22 +95,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES['profile']) && $_FILES['profile']['error'] == UPLOAD_ERR_OK) {
         $check = getimagesize($_FILES['profile']['tmp_name']);
         if ($check !== false) {
-            $message =  "File is an image - " . $check['mime'] . ".";
+            $message = "File is an image - " . $check['mime'] . ".";
         } else {
-            $message =  "File is not an image.";
+            $message = "File is not an image.";
             $uploadOk = 0;
         }
 
         // Check file size (e.g., limit to 5MB)
         if ($_FILES['profile']['size'] > 5000000) {
-            $message =  "Your file is too large.";
+            $message = "Your file is too large.";
             $uploadOk = 0;
         }
 
         // Allow certain file formats
         $allowedFileTypes = ['jpg', 'jpeg', 'png'];
         if (!in_array($imageFileType, $allowedFileTypes)) {
-            $message =  "Only JPG, JPEG, PNG & GIF files are allowed.";
+            $message = "Only JPG, JPEG, and PNG files are allowed.";
             $uploadOk = 0;
         }
 
@@ -121,39 +119,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile)) {
                 $picture = $targetFile; // Set $picture to the path of the uploaded file
             } else {
-                $message =  "Sorry, there was an error uploading your file.";
+                $message = "Sorry, there was an error uploading your file.";
             }
         }
     } else {
-        echo "No file uploaded or upload error.";
+        $message = "No file uploaded or upload error.";
     }
 
-    
-
+    // Validate email and phone number
     if (!isValidEmail($email)) {
-
-        if(!isValidPhoneNumber($phoneNumber)){
+        if (!isValidPhoneNumber($phoneNumber)) {
             $message = "Invalid email and phone number.";
-        }
-        else {
-        $message = "Invalid email address. Please enter a valid email.";
+        } else {
+            $message = "Invalid email address. Please enter a valid email.";
         } 
-       
-    }
-    elseif (!isValidPhoneNumber($phoneNumber)) {
-        $message = "Invalid phone number. Please enter a valid phone number";
-    }
-    else{
-        if ($uploadOk == 1) {
+    } elseif (!isValidPhoneNumber($phoneNumber)) {
+        $message = "Invalid phone number. Please enter a valid phone number.";
+    } else {
+        // Ensures the password is not empty
+        if (!empty($password)) {
             // Hash the password with salted rounds
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    
+
             // Insert user data into the database with hashed password
             $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
                     VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
-    
+
             $result = mysqli_query($conn, $sql);
-    
+
             if ($result) {
                 $message = "Welcome, $fullname! Registration successful. Redirecting...";
                 // Set session variables after successful registration
@@ -165,12 +158,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $message = "Error: " . mysqli_error($conn);
             }
+        } else {
+            $message = "Password cannot be empty.";
         }
- }
+    }
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
