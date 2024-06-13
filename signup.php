@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "Invalid phone number. Please enter a valid phone number.";
     } else {
         // Ensures the password is not empty
-        if (!empty($password) && !empty($fullname) && !empty($address) ) {
+        if (!empty($password)) {
             // Hash the password with salted rounds
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -258,22 +258,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form class="signup-form" method="post" action="signup.php" enctype="multipart/form-data">
                 <h2 class="signup-title">Sign Up</h2>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name"> <!-- Add name attribute -->
+                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name" required> 
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" > <!-- Add name attribute -->
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" required> 
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password"> <!-- Add name attribute -->
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required> 
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number"> <!-- Add phoneNumber field -->
+                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required> 
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="address" name="address" placeholder="Address"> <!-- Add address field -->
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
                 </div>
                 <div class="form-group">
-                    <input type="number" step="0.01" class="form-control" id="wallet" name="wallet" placeholder="Wallet Balance"> <!-- Add wallet balance field -->
+                    <input type="number" step="0.01" class="form-control" id="wallet" name="wallet" placeholder="Wallet Balance"> 
                 </div>
                 <div class = "form-group">
                     <input type="file" class="form-control" id="profile" name="profile" placeholder="Upload Your Profile Pic" accept="image/*">
