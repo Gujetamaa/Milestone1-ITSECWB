@@ -132,6 +132,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $message = "No user found with this email. Please sign up.";
     }
+
+    // Store message in session and redirect
+    $_SESSION['message'] = $message;
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Display message from session if exists and clear it
+if (isset($_SESSION['message'])) {
+    $message = $_SESSION['message'];
+    unset($_SESSION['message']);
 }
 ?>
 
@@ -224,24 +235,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 
 <div class="container login-container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form class="login-form" method="post" action="index.php">
-                <h2 class="login-title">Login</h2>
-                <div class="form-group">
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Email"> <!-- Add name attribute -->
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password"> <!-- Add name attribute -->
-                </div>
-                <button type="submit" class="btn btn-block btn-login">Login</button>
-                <div class="signup-link">
-                    <a href="signup.php">Don't have an account? Sign Up</a>
-                </div>
-            </form>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form class="login-form" method="post" action="">
+                    <h2 class="login-title">Login</h2>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-block btn-login">Login</button>
+                    <div class="signup-link">
+                        <a href="signup.php">Don't have an account? Sign Up</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 <!-- Display slide prompt message if set -->
 <?php if (!empty($message)) : ?>
@@ -263,4 +274,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
