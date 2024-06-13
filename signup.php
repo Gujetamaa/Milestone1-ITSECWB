@@ -137,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "Invalid phone number. Please enter a valid phone number.";
     } else {
         // Ensures the password is not empty
-        if (!empty($password)) {
+        if (!empty($password) && !empty($fullname) && !empty($address) ) {
             // Hash the password with salted rounds
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -159,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Error: " . mysqli_error($conn);
             }
         } else {
-            $message = "Password cannot be empty.";
+            $message = "Please fill in all credentials.";
         }
     }
 }
