@@ -86,24 +86,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : 0.00; // Get wallet balance if provided
     $picture = null; // Initialize picture variable
     
-    $uploadOk = 1; // Flag to check upload success
+    $uploadOk = 0; // Flag to check upload success
     $targetDir = "uploads/";
     $targetFile = $targetDir.basename($_FILES['profile']['name']);
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
+    
     // Check if the uploaded file is an image
+    
     if (isset($_FILES['profile']) && $_FILES['profile']['error'] == UPLOAD_ERR_OK) {
         $check = getimagesize($_FILES['profile']['tmp_name']);
         if ($check !== false) {
-            $message = "File is an image - " . $check['mime'] . ".";
+                $uploadOk = 1;
         } else {
             $message = "File is not an image.";
             $uploadOk = 0;
         }
-
+        
         // Check file size (e.g., limit to 5MB)
         if ($_FILES['profile']['size'] > 5000000) {
-            $message = "Your file is too large.";
+            $message = "Your Image is too large.";
             $uploadOk = 0;
         }
 
@@ -113,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $message = "Only JPG, JPEG, and PNG files are allowed.";
             $uploadOk = 0;
         }
-
+        
         // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 1) {
             if (move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile)) {
@@ -124,6 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         $message = "No file uploaded or upload error.";
+        
     }
 
     // Validate email and phone number
@@ -138,26 +140,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         // Ensures the password is not empty
         if (!empty($password)) {
-            // Hash the password with salted rounds
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            if($uploadOk == 1){
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Insert user data into the database with hashed password
-            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
-                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
-
-            $result = mysqli_query($conn, $sql);
-
-            if ($result) {
-                $message = "Welcome, $fullname! Registration successful. Redirecting...";
-                // Set session variables after successful registration
-                $_SESSION['email'] = $email;
-                $_SESSION['fullname'] = $fullname;
-                $_SESSION['role'] = $role;
-                // Redirect to index.php after 4 seconds
-                echo '<meta http-equiv="refresh" content="4;url=index.php">';
-            } else {
-                $message = "Error: " . mysqli_error($conn);
+                // Insert user data into the database with hashed password
+                $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
+                        VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
+    
+                $result = mysqli_query($conn, $sql);
+    
+                if ($result) {
+                    $message = "Welcome, $fullname! Registration successful. Redirecting...";
+                    // Set session variables after successful registration
+                    $_SESSION['email'] = $email;
+                    $_SESSION['fullname'] = $fullname;
+                    $_SESSION['role'] = $role;
+                    // Redirect to index.php after 4 seconds
+                    echo '<meta http-equiv="refresh" content="4;url=index.php">';
+                } else {
+                    $message = "Error: " . mysqli_error($conn);
+                }
             }
+            // Hash the password with salted rounds
+            
         } else {
             $message = "Please fill in all credentials.";
         }
