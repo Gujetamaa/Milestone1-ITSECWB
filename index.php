@@ -88,6 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } elseif ($login_attempts >= 4){
                 $message = "Access denied. Please try again later.";
             }
+
+             // Store message in session and redirect
+             $_SESSION['message'] = $message;
+             header("Location: " . $_SERVER['PHP_SELF']);
+             exit();
         } else {
             // Verify hashed password
             if (password_verify($password, $user['password'])) {
@@ -113,30 +118,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['role'] = 'User';
                     // Redirect to index.php after 4 seconds
                     echo '<meta http-equiv="refresh" content="4;url=user.php">';
-                } else {
-                    $message = "Unknown user role. Please contact the administrator.";
-                }
+                } 
             } else {
-                if ($login_attempts >= 3) {
+                if ($login_attempts == 3) { //EDITED THIS LINE
                     $ban_time = time() + 300; // Ban for 5 minutes
                     //$sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
                     $sql = "UPDATE users SET ban_time = $ban_time WHERE BINARY email='$email'";
                     mysqli_query($conn, $sql);
                     
                     $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
+                    
                 } else {
                     $message = "Incorrect password. Please try again.";
+
                 }
+
+                 // Store message in session and redirect
+                 $_SESSION['message'] = $message;
+                 header("Location: " . $_SERVER['PHP_SELF']);
+                 exit();
             }
         }
     } else {
         $message = "No user found with this email. Please sign up.";
-    }
 
-    // Store message in session and redirect
-    $_SESSION['message'] = $message;
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
+        // Store message in session and redirect
+            $_SESSION['message'] = $message;
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+    }
+    
 }
 
 // Display message from session if exists and clear it
