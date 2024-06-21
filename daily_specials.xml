@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dailySpecials>
+    <special>
+        <name>Caramel Macchiato</name>
+        <description>Espresso combined with vanilla-flavored syrup, milk, and caramel sauce over the top.</description>
+        <price>4.99</price>
+    </special>
+    <special>
+        <name>Banana Nut Muffin</name>
+        <description>Freshly baked muffin with banana and crunchy walnuts.</description>
+        <price>3.50</price>
+    </special>
+</dailySpecials>
