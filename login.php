@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['fullname'] = $user['fullname'];
                     $_SESSION['role'] = 'User';
                     // Redirect to index.php after 4 seconds
-                    echo '<meta http-equiv="refresh" content="4;url=user.php">';
+                    echo '<meta http-equiv="refresh" content="4;url=index.php">';
                 } 
             } else {
                 if ($login_attempts == 3) { //EDITED THIS LINE

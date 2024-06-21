@@ -41,10 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $userEmail = $_SESSION['email'];
-    $walletQuery = "SELECT wallet FROM users WHERE email = '$userEmail'";
-    $walletResult = mysqli_query($conn, $walletQuery);
-    if ($walletResult && mysqli_num_rows($walletResult) > 0) {
-        $userWalletBefore = mysqli_fetch_assoc($walletResult)['wallet']; 
+    $userQuery = "SELECT id, wallet FROM users WHERE email = '$userEmail'";
+    $userResult = mysqli_query($conn, $userQuery);
+    if ($userResult && mysqli_num_rows($userResult) > 0) {
+        $userData = mysqli_fetch_assoc($userResult);
+        $userId = $userData['id'];
+        $userWalletBefore = $userData['wallet']; 
         if ($userWalletBefore < $totalPrice) {
             $message = "Insufficient balance in your wallet. Please add funds.";
             echo "<script>window.location.href='checkout.php?message=$message';</script>";
@@ -65,14 +67,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $orderDate = date('Y-m-d H:i:s');
             $discountAmount = 0; 
-            $insertOrderQuery = "INSERT INTO orders (user_id, order_date, total_price, discount_amount, quantity, customer_address) VALUES ('$userEmail', '$orderDate', '$totalPrice', '$discountAmount', '$totalQuantity', '$customerAddress')";
+            $insertOrderQuery = "INSERT INTO orders (user_id, order_date, total_price, discount_amount, quantity, customer_address) VALUES ('$userId', '$orderDate', '$totalPrice', '$discountAmount', '$totalQuantity', '$customerAddress')";
             mysqli_query($conn, $insertOrderQuery);
 
             $_SESSION['cart'] = []; 
         }
     }
 
-    $walletResult = mysqli_query($conn, $walletQuery);
+    $walletResult = mysqli_query($conn, $userQuery);
     $userWalletAfter = mysqli_fetch_assoc($walletResult)['wallet']; 
 
     $confirmationMessage = "Thank you, {$customerName}. Your order has been received and will be shipped to {$customerAddress}. Total payment: ₱" . number_format($totalPrice, 2);
