@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $totalQuantity = 0;
 
     foreach ($_SESSION['cart']['items'] as $itemId => $details) {
-        $itemPriceQuery = "SELECT price FROM menu_items WHERE id = $itemId";
+        $itemPriceQuery = "SELECT price FROM menu_items WHERE menu_id = $itemId";
         $itemPriceResult = mysqli_query($conn, $itemPriceQuery);
         if ($itemPriceResult && mysqli_num_rows($itemPriceResult) > 0) {
             $itemPrice = mysqli_fetch_assoc($itemPriceResult)['price'];
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     foreach ($_SESSION['cart']['combos'] as $comboId => $details) {
-        $comboPriceQuery = "SELECT price FROM combo_meals WHERE id = $comboId";
+        $comboPriceQuery = "SELECT price FROM combo_meals WHERE combo_id = $comboId";
         $comboPriceResult = mysqli_query($conn, $comboPriceQuery);
         if ($comboPriceResult && mysqli_num_rows($comboPriceResult) > 0) {
             $comboPrice = mysqli_fetch_assoc($comboPriceResult)['price'];
@@ -56,12 +56,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_query($conn, $updateWallet);
 
             foreach ($_SESSION['cart']['items'] as $itemId => $details) {
-                $updateItemQuery = "UPDATE menu_items SET stock_quantity = stock_quantity - {$details['quantity']} WHERE id = $itemId";
+                $updateItemQuery = "UPDATE menu_items SET stock_quantity = stock_quantity - {$details['quantity']} WHERE menu_item_id = $itemId";
                 mysqli_query($conn, $updateItemQuery);
             }
 
             foreach ($_SESSION['cart']['combos'] as $comboId => $details) {
-                $updateComboQuery = "UPDATE combo_meals SET quantity = quantity - {$details['quantity']} WHERE id = $comboId";
+                $updateComboQuery = "UPDATE combo_meals SET quantity = quantity - {$details['quantity']} WHERE combo_id = $comboId";
                 mysqli_query($conn, $updateComboQuery);
             }
 

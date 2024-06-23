@@ -1,17 +1,16 @@
 <?php
-session_start(); 
+session_start();
 include 'admin_navbar.php';
 include 'db_connection.php';
 
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_specials'])) {
-    $name = isset($_POST['name']) ? $_POST['name'] : '';
-    $description = isset($_POST['description']) ? $_POST['description'] : '';
-    $price = isset($_POST['price']) ? $_POST['price'] : '';
-
-    $start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
-    $end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    $price = mysqli_real_escape_string($conn, $_POST['price']);
+    $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
+    $end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
 
     if ($start_date > $end_date) {
         $message = "End date should be after start date.";
@@ -27,8 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_specials'])) {
 }
 
 if(isset($_POST['delete_id'])) {
-    $delete_id = $_POST['delete_id'];
-    $delete_sql = "DELETE FROM specials WHERE id = '$delete_id'";
+    $delete_id = mysqli_real_escape_string($conn, $_POST['delete_id']);
+    $delete_sql = "DELETE FROM specials WHERE specials_id = '$delete_id'";
     if (mysqli_query($conn, $delete_sql)) {
         $message = "Specials successfully deleted.";
         echo '<meta http-equiv="refresh" content="2;url=admin_specials.php">';
@@ -168,6 +167,10 @@ if (mysqli_num_rows($result) > 0) {
                         <input type="text" class="form-control" id="description" name="description" required>
                     </div>
                     <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
                         <label for="start_date">Start Date</label>
                         <input type="date" class="form-control" id="start_date" name="start_date" required>
                     </div>
@@ -182,18 +185,19 @@ if (mysqli_num_rows($result) > 0) {
                 <h3 class="promotion-title">Current Specials</h3>
                 <?php if (!empty($specials)) : ?>
                     <?php foreach ($specials as $key => $special) : ?>
-                        <div class="promotion-item" id="specials_<?php echo $key; ?>">
+                        <div class="promotion-item" id="specials_id<?php echo $key; ?>">
                             <h4><?php echo $special['name']; ?></h4>
                             <p>Description: <?php echo $special['description']; ?></p>
+                            <p>Price: <?php echo $special['price']; ?></p>
                             <p>Start Date: <?php echo $special['start_date']; ?></p>
                             <p>End Date: <?php echo $special['end_date']; ?></p>
                             <div class="promotion-buttons">
                                 <form method="post" action="update_specials.php">
-                                    <input type="hidden" name="update_id" value="<?php echo $special['id']; ?>">
+                                    <input type="hidden" name="update_id" value="<?php echo $special['specials_id']; ?>">
                                     <button type="submit" class="btn btn-primary update-btn">Update</button>
                                 </form>
                                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <input type="hidden" name="delete_id" value="<?php echo $special['id']; ?>">
+                                    <input type="hidden" name="delete_id" value="<?php echo $special['specials_id']; ?>">
                                     <button type="submit" class="btn btn-danger delete-btn" onclick="return confirm('Are you sure you want to delete this specials?')">Delete</button>
                                 </form>
                             </div>

@@ -194,7 +194,7 @@ if (mysqli_num_rows($result) > 0) {
     <?php
     while ($row = mysqli_fetch_assoc($result)) {
     ?>
-    <div class="promotion-item" onclick="window.location.href='specials_details.php?id=<?php echo $row['id']; ?>';">
+    <div class="promotion-item" onclick="window.location.href='specials_details.php?id=<?php echo $row['specials_id']; ?>';">
         <h2 class="promotion-title"><?php echo $row['name']; ?></h2>
         <p class="promotion-description"><?php echo $row['description']; ?></p>
         <p class="promotion-duration">Duration: <?php echo $row['start_date']; ?> to <?php echo $row['end_date']; ?></p>

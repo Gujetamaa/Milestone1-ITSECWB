@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
 
         while ($row = mysqli_fetch_assoc($result)) {
             $order = $xml->addChild('order');
-            $order->addChild('id', $row['id']);
+            $order->addChild('order_id', $row['order_id']);
             $order->addChild('user_id', $row['user_id']);
             $order->addChild('order_date', $row['order_date']);
             $order->addChild('total_price', $row['total_price']);

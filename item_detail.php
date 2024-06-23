@@ -2,10 +2,10 @@
 include 'navbar.php';
 include 'db_connection.php';
 
-$itemId = $_GET['id'] ?? '';
+$itemId = $_GET['menu_item_id'] ?? '';
 
 // Fetch item details from the database
-$sql = "SELECT * FROM menu_items WHERE id = '$itemId'";
+$sql = "SELECT * FROM menu_items WHERE menu_item_id = '$itemId'";
 $result = mysqli_query($conn, $sql);
 
 $item = mysqli_fetch_assoc($result);

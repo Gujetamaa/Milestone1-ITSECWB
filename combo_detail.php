@@ -4,7 +4,7 @@ include 'db_connection.php';
 
 $comboId = $_GET['id'] ?? '';
 
-$sql = "SELECT * FROM combo_meals WHERE id = '$comboId'";
+$sql = "SELECT * FROM combo_meals WHERE combo_id = '$comboId'";
 $result = mysqli_query($conn, $sql);
 
 $combo = mysqli_fetch_assoc($result);

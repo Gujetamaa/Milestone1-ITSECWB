@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_combo'])) {
 
 if(isset($_POST['delete_id'])) {
     $delete_id = $_POST['delete_id'];
-    $stmt = $conn->prepare("DELETE FROM combo_meals WHERE id = ?");
+    $stmt = $conn->prepare("DELETE FROM combo_meals WHERE combo_id = ?");
     $stmt->bind_param("i", $delete_id);
     if ($stmt->execute()) {
         $message = "Combo meal successfully deleted.";
@@ -275,11 +275,11 @@ if (!empty($low_stock_alerts)) {
                             <p>Category: <?php echo $combo_meal['category']; ?></p>
                             <div class="promotion-buttons">
                                 <form method="post" action="update_combo.php">
-                                    <input type="hidden" name="update_id" value="<?php echo $combo_meal['id']; ?>">
+                                    <input type="hidden" name="update_id" value="<?php echo $combo_meal['combo_id']; ?>">
                                     <button type="submit" class="btn btn-primary update-btn">Update</button>
                                 </form>
                                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <input type="hidden" name="delete_id" value="<?php echo $combo_meal['id']; ?>">
+                                    <input type="hidden" name="delete_id" value="<?php echo $combo_meal['combo_id']; ?>">
                                     <button type="submit" class="btn btn-danger delete-btn" onclick="return confirm('Are you sure you want to delete this combo meal?')">Delete</button>
                                 </form>
                             </div>

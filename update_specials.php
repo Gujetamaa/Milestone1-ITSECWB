@@ -7,7 +7,7 @@ $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     $update_id = $_POST['update_id'];
-    $sql = "SELECT * FROM specials WHERE id = '$update_id'";
+    $sql = "SELECT * FROM specials WHERE specials_id = '$update_id'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) == 1) {
         $special = mysqli_fetch_assoc($result);

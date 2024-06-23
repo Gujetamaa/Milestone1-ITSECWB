@@ -8,7 +8,7 @@ $low_stock_threshold = 10;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     $update_id = $_POST['update_id'];
-    $sql = "SELECT * FROM combo_meals WHERE id = '$update_id'";
+    $sql = "SELECT * FROM combo_meals WHERE combo_id = '$update_id'";
     $result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($result) == 1) {
         $combo_meal = mysqli_fetch_assoc($result);

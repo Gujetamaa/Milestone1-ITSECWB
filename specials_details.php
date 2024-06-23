@@ -5,7 +5,7 @@ include 'navbar.php';
 if(isset($_GET['id'])) {
     $special_id = mysqli_real_escape_string($conn, $_GET['id']);
 
-    $sql = "SELECT * FROM specials WHERE id = '$special_id'";
+    $sql = "SELECT * FROM specials WHERE specials_id = '$special_id'";
     $result = mysqli_query($conn, $sql);
 
     if(mysqli_num_rows($result) > 0) {

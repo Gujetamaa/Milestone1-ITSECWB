@@ -78,7 +78,7 @@ if (mysqli_num_rows($result) > 0) {
     <div class="row">
         <?php foreach ($menuItems as $item): ?>
             <div class="col-md-4 mb-4">
-                <div class="card menu-item-card h-100" onclick="window.location.href='item_detail.php?id=<?php echo $item['id']; ?>';">
+                <div class="card menu-item-card h-100" onclick="window.location.href='item_detail.php?id=<?php echo $item['menu_item_id']; ?>';">
                 <img src="images/<?php echo $item['image']; ?>" class="card-img-top" alt="<?php echo $item['name']; ?>">    
                 <div class="card-body">
                         <h5 class="card-title"><?php echo $item['name']; ?></h5>

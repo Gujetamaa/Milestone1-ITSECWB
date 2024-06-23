@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_item'])) {
 
 if(isset($_POST['delete_id'])) {
     $delete_id = $_POST['delete_id'];
-    $delete_sql = "DELETE FROM menu_items WHERE id = '$delete_id'";
+    $delete_sql = "DELETE FROM menu_items WHERE menu_item_id = '$delete_id'";
     if (mysqli_query($conn, $delete_sql)) {
         $message = "Menu item successfully deleted.";
         echo '<meta http-equiv="refresh" content="2;url=admin_menu.php">';
@@ -244,11 +244,11 @@ if (!empty($low_stock_alerts)) {
                             <br><br>
                             <div class="promotion-buttons">
                                 <form method="post" action="update_menu.php">
-                                    <input type="hidden" name="update_id" value="<?php echo $menu_item['id']; ?>">
+                                    <input type="hidden" name="update_id" value="<?php echo $menu_item['menu_item_id']; ?>">
                                     <button type="submit" class="btn btn-primary update-btn">Update</button>
                                 </form>
                                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <input type="hidden" name="delete_id" value="<?php echo $menu_item['id']; ?>">
+                                    <input type="hidden" name="delete_id" value="<?php echo $menu_item['menu_item_id']; ?>">
                                     <button type="submit" class="btn btn-danger delete-btn" onclick="return confirm('Are you sure you want to delete this menu item?')">Delete</button>
                                 </form>
                             </div>

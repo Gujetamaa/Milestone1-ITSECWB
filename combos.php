@@ -101,7 +101,7 @@ if (mysqli_num_rows($result) > 0) {
                 <h5 class="card-title"><?php echo $combo['name']; ?></h5>
                 <h6 class="card-subtitle">₱<?php echo number_format($combo['price'], 2); ?></h6>
                 <p class="card-text"><?php echo $combo['description']; ?></p>
-                <a href="combo_detail.php?id=<?php echo $combo['id']; ?>" class="card-link">View Combo</a>
+                <a href="combo_detail.php?id=<?php echo $combo['combo_id']; ?>" class="card-link">View Combo</a>
             </div>
         </div>
     <?php endforeach; ?>
