@@ -1,0 +1,26 @@
+[2024-07-13 11:56:04] [ADD_MENU_ITEM] Added menu item: log check
+[2024-07-13 12:10:00] Combo meal created: log check
+[2024-07-13 12:11:48] Combo meal deleted: ID 106
+[2024-07-13 12:11:57] [DELETE_MENU_ITEM] Deleted menu item with ID: 18
+[2024-07-13 12:34:47] [ADD_MENU_ITEM] Added menu item: log checker for menu
+[2024-07-13 12:38:52] Specials deleted: ID 68
+[2024-07-13 12:38:59] Specials deleted: ID 69
+[2024-07-13 12:39:17] Specials created: log check creation
+[2024-07-13 12:41:03] [DELETE_MENU_ITEM] Deleted menu item with ID: 17
+[2024-07-13 12:41:09] [DELETE_MENU_ITEM] Deleted menu item with ID: 20
+[2024-07-13 12:41:15] [DELETE_MENU_ITEM] Deleted menu item with ID: 16
+[2024-07-13 12:41:19] [DELETE_MENU_ITEM] Deleted menu item with ID: 15
+[2024-07-13 12:41:23] [DELETE_MENU_ITEM] Deleted menu item with ID: 14
+[2024-07-13 13:25:10] [Admin Action] Update Combo Meal: Updated combo meal ID: 100
+[2024-07-13 13:34:57] [UPDATE_SPECIALS] Updated specials: log check creation
+[2024-07-13 13:36:03] [UPDATE_SPECIALS] Updated specials: special test checker
+[2024-07-13 13:36:47] Update Menu Item: Menu item updated: log check update
+[2024-07-13 13:37:27] [DELETE_MENU_ITEM] Deleted menu item with ID: 19
+[2024-07-13 13:37:35] Specials deleted: ID 68
+[2024-07-13 13:38:05] [Admin Action] Update Combo Meal: Updated combo meal ID: 105
+[2024-07-13 13:45:06] [GENERATE_USER_REPORT] Generated user report
+[2024-07-13 13:48:50] [GENERATE_SPECIALS_REPORT] Generated specials report
+[2024-07-13 13:50:23] [GENERATE_MENU_ITEMS_REPORT] Generated menu items report
+[2024-07-13 13:52:13] [GENERATE_ORDER_REPORT] Generated order report for date: 2024-06-23
+[2024-07-13 13:57:58] Combo meal created: combo checker 
+[2024-07-13 14:02:45] [GENERATE_COMBO_MEALS_REPORT] Generated combo meals report

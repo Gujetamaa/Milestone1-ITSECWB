@@ -39,7 +39,7 @@ $menuItemsResult = mysqli_query($conn, $menuItemsQuery);
 $menuItems = [];
 if ($menuItemsResult) {
     while ($menuItem = mysqli_fetch_assoc($menuItemsResult)) {
-        $menuItems[$menuItem['id']] = $menuItem;
+        $menuItems[$menuItem['menu_item_id']] = $menuItem;
     }
 }
 
@@ -48,7 +48,7 @@ $combosResult = mysqli_query($conn, $combosQuery);
 $combos = [];
 if ($combosResult) {
     while ($combo = mysqli_fetch_assoc($combosResult)) {
-        $combos[$combo['id']] = $combo;
+        $combos[$combo['combo_id']] = $combo;
     }
 }
 

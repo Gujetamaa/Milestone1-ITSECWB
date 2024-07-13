@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2024 at 01:27 PM
+-- Generation Time: Jul 13, 2024 at 10:59 AM
 -- Server version: 8.0.37
 -- PHP Version: 8.2.12
 
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `combo_meals` (
   `combo_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `main_dish` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `side_dish` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `drink` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `main_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `side_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `drink` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `discount_percentage` decimal(5,2) NOT NULL,
-  `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -50,8 +50,6 @@ INSERT INTO `combo_meals` (`combo_id`, `name`, `description`, `main_dish`, `side
 (102, 'Morning Energy Boost Combo', 'Start your day with energy! Our Morning Energy Boost Combo includes Pancake, Egg Toast, and a refreshing Coke.', 'Breakfast Wrap', 'Crisscut Fries', 'Chocolate Cream Frappuccino', 200.00, 10.00, 'Morning', 50),
 (103, 'Evening Delight Combo', 'Experience an evening delight with our Grilled Chicken Wrap, served with crispy French Fries and a delightful Mocha Frappe.', 'Grilled Chicken Wrap', 'French Fries', 'Mocha Frappe', 280.00, 10.00, 'Evening', 50),
 (104, 'Aprils Specials', 'Enjoy the specials', 'Meatball Pasta', 'Crisscut Fries', 'Iced Chocolate', 199.00, 10.00, 'Morning', 20);
-
--- --------------------------------------------------------
 
 --
 -- Triggers `combo_meals`
@@ -106,7 +104,7 @@ CREATE TRIGGER `combo_meals_BEFORE_INSERT` BEFORE INSERT ON `combo_meals` FOR EA
 
     DECLARE max_combo INT DEFAULT 0;
 
-    SELECT MAX(combo_id) INTO max_combo FROM combo_meals_audit;
+    SELECT MAX(combo_id) INTO max_combo FROM combo_meals;
     
     IF max_combo IS NULL THEN
         SET new.combo_id = 1;
@@ -127,7 +125,7 @@ DELIMITER ;
 CREATE TABLE `combo_meals_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
+  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `combo_id` int NOT NULL,
   `old_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `old_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
@@ -149,8 +147,6 @@ CREATE TABLE `combo_meals_audit` (
   `new_quantity` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -159,16 +155,15 @@ CREATE TABLE `combo_meals_audit` (
 
 CREATE TABLE `menu_items` (
   `menu_item_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `stock_quantity` int NOT NULL,
-  `image` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `image` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
--- 
+--
 -- Dumping data for table `menu_items`
 --
 
@@ -185,8 +180,6 @@ INSERT INTO `menu_items` (`menu_item_id`, `name`, `category`, `price`, `descript
 (10, 'Iced/Hot Caramel Macchiato', 'Drink', 180.00, 'A perfect blend of espresso, vanilla, and caramel.', 50, '660182f46917c.webp'),
 (11, 'Chocolate Cream Frappuccino', 'Drink', 210.00, 'Creamy chocolate frappuccino topped with whipped cream.', 50, '6601831029d96.webp'),
 (12, 'Bottled Water', 'Drink', 25.00, 'Chilled bottled water.', 40, '6601833ee4cd3.webp');
-
--- --------------------------------------------------------
 
 --
 -- Triggers `menu_items`
@@ -237,7 +230,7 @@ CREATE TRIGGER `menu_items_BEFORE_INSERT` BEFORE INSERT ON `menu_items` FOR EACH
 
     DECLARE max_menu INT DEFAULT 0;
 
-    SELECT MAX(menu_item_id) INTO max_menu FROM menu_items_audit;
+    SELECT MAX(menu_item_id) INTO max_menu FROM menu_items;
     
     IF max_menu IS NULL THEN
         SET new.menu_item_id = 1;
@@ -260,7 +253,7 @@ DELIMITER ;
 CREATE TABLE `menu_items_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
+  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `menu_item_id` int NOT NULL,
   `old_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `old_category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -274,8 +267,8 @@ CREATE TABLE `menu_items_audit` (
   `new_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `new_stock_quantity` int DEFAULT NULL,
   `new_image` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -347,7 +340,7 @@ CREATE TRIGGER `orders_BEFORE_INSERT` BEFORE INSERT ON `orders` FOR EACH ROW BEG
 
     DECLARE max_order INT DEFAULT 0;
 
-    SELECT MAX(order_id) INTO max_order FROM orders_audit;
+    SELECT MAX(order_id) INTO max_order FROM orders;
     
     IF max_order IS NULL THEN
         SET new.order_id = 1;
@@ -405,8 +398,8 @@ INSERT INTO `orders_audit` (`audit_id`, `audit_timestamp`, `activity`, `order_id
 
 CREATE TABLE `specials` (
   `specials_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
@@ -464,7 +457,7 @@ CREATE TRIGGER `specials_BEFORE_INSERT` BEFORE INSERT ON `specials` FOR EACH ROW
 
     DECLARE max_specials INT DEFAULT 0;
 
-    SELECT MAX(specials_id) INTO max_specials FROM specials_audit;
+    SELECT MAX(specials_id) INTO max_specials FROM specials;
     
     IF max_specials IS NULL THEN
         SET new.specials_id = 1;
@@ -485,20 +478,20 @@ DELIMITER ;
 CREATE TABLE `specials_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
+  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `specials_id` int NOT NULL,
-  `old_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_description` text COLLATE utf8mb4_general_ci,
+  `old_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `old_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `old_price` decimal(8,2) DEFAULT NULL,
   `old_startdate` date DEFAULT NULL,
   `old_enddate` date DEFAULT NULL,
-  `new_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_description` text COLLATE utf8mb4_general_ci,
+  `new_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `new_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `new_price` decimal(8,2) DEFAULT NULL,
   `new_startdate` date DEFAULT NULL,
   `new_enddate` date DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -521,18 +514,17 @@ INSERT INTO `specials_audit` (`audit_id`, `audit_timestamp`, `activity`, `specia
 
 CREATE TABLE `users` (
   `user_id` int NOT NULL,
-  `fullname` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(330) COLLATE utf8mb4_general_ci NOT NULL,
-  `phoneNumber` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `role` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(330) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `phoneNumber` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `wallet` decimal(10,2) DEFAULT '0.00',
-  `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `login_attempts` int DEFAULT NULL,
   `ban_time` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
 -- Dumping data for table `users`
@@ -595,7 +587,7 @@ CREATE TRIGGER `users_BEFORE_INSERT` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
 
     DECLARE max_user INT DEFAULT 0;
 
-    SELECT MAX(user_id) INTO max_user FROM users_audit;
+    SELECT MAX(user_id) INTO max_user FROM users;
     
     IF max_user IS NULL THEN
         SET new.user_id = 1;
@@ -616,7 +608,7 @@ DELIMITER ;
 CREATE TABLE `users_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
+  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `user_id` int NOT NULL,
   `old_fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `old_email` varchar(330) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -638,9 +630,17 @@ CREATE TABLE `users_audit` (
   `new_picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `new_login_attempts` int DEFAULT NULL,
   `new_ban_time` int DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users_audit`
+--
+
+INSERT INTO `users_audit` (`audit_id`, `audit_timestamp`, `activity`, `user_id`, `old_fullname`, `old_email`, `old_phoneNumber`, `old_password`, `old_role`, `old_wallet`, `old_address`, `old_picture`, `old_login_attempts`, `old_ban_time`, `new_fullname`, `new_email`, `new_phoneNumber`, `new_password`, `new_role`, `new_wallet`, `new_address`, `new_picture`, `new_login_attempts`, `new_ban_time`, `end_user`, `end_reason`) VALUES
+(1, '2024-07-13 16:35:50', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'System', 'Updated user details'),
+(2, '2024-07-13 16:35:50', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'System', 'Updated user details');
 
 --
 -- Indexes for dumped tables
@@ -695,26 +695,26 @@ ALTER TABLE `specials_audit`
   ADD PRIMARY KEY (`audit_id`);
 
 --
--- Indexes for table `users_audit`
---
-ALTER TABLE `users_audit`
-  ADD PRIMARY KEY (`audit_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `users_audit`
+--
+ALTER TABLE `users_audit`
+  ADD PRIMARY KEY (`audit_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
-
 --
 -- AUTO_INCREMENT for table `combo_meals_audit`
 --
 ALTER TABLE `combo_meals_audit`
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT;
+
 
 --
 -- AUTO_INCREMENT for table `menu_items_audit`
@@ -728,6 +728,7 @@ ALTER TABLE `menu_items_audit`
 ALTER TABLE `orders_audit`
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
+
 --
 -- AUTO_INCREMENT for table `specials_audit`
 --
@@ -738,7 +739,7 @@ ALTER TABLE `specials_audit`
 -- AUTO_INCREMENT for table `users_audit`
 --
 ALTER TABLE `users_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

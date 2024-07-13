@@ -1,7 +1,18 @@
 <?php 
 include 'navbar.php'; 
-
 include 'db_connection.php';
+
+// Function to log actions to user_actions.log
+function logAction($action, $details) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+    $timestamp = date('[Y-m-d H:i:s]');
+
+    // Prepare log message
+    $logMessage = "$timestamp [$action] $details" . PHP_EOL;
+
+    // Append to log file
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
 
 if(isset($_SESSION['email'])) {
     $userEmail = $_SESSION['email'];
@@ -26,9 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $updateQuery = "UPDATE users SET wallet = wallet + $topupAmount WHERE email = '$userEmail'";
             mysqli_query($conn, $updateQuery);
             
+            // Retrieve updated wallet balance
             $walletQuery = "SELECT wallet FROM users WHERE email = '$userEmail'";
             $walletResult = mysqli_query($conn, $walletQuery);
             $userWallet = mysqli_fetch_assoc($walletResult)['wallet'];
+
+            // Log the action
+            logAction('TOP_UP_WALLET', "User $userEmail topped up wallet by ₱$topupAmount");
         }
     }
 }

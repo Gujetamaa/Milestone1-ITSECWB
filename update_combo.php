@@ -3,6 +3,14 @@ session_start();
 include 'admin_navbar.php';
 include 'db_connection.php';
 
+// Function to log  actions
+function logAction($action, $details) {
+    $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\admin_actions.log';
+    $timestamp = date('[Y-m-d H:i:s]');
+    $logMessage = "$timestamp [Admin Action] $action: $details\n";
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
+
 $message = ""; 
 $low_stock_threshold = 10; 
 
@@ -23,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     exit();
 }
 
-
 $name = isset($_POST['name']) ? $_POST['name'] : $combo_meal['name'];
 $description = isset($_POST['description']) ? $_POST['description'] : $combo_meal['description'];
 $main_dish = isset($_POST['main_dish']) ? $_POST['main_dish'] : $combo_meal['main_dish'];
@@ -34,7 +41,6 @@ $discount_percentage = isset($_POST['discount_percentage']) ? $_POST['discount_p
 $category = isset($_POST['category']) ? $_POST['category'] : $combo_meal['category'];
 $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : $combo_meal['quantity']; // Add the quantity field here
 
-
 $sql = "SELECT * FROM combo_meals";
 $result = $conn->query($sql);
 $combo_meals = [];
@@ -43,7 +49,6 @@ if ($result->num_rows > 0) {
         $combo_meals[] = $row;
     }
 }
-
 
 $menu_items = [];
 $categories = ['Mains', 'Sides', 'Drink'];
@@ -57,7 +62,6 @@ foreach ($categories as $cat) {
     }
 }
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_combo'])) {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
@@ -70,12 +74,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_combo'])) {
     $update_id = isset($_POST['update_id']) ? $_POST['update_id'] : '';
     $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : ''; 
 
-    $sql = "UPDATE combo_meals SET name='$name', description='$description', main_dish='$main_dish', side_dish='$side_dish', drink='$drink', price='$price', discount_percentage='$discount_percentage', category='$category', quantity='$quantity' WHERE id='$update_id'"; 
+    $sql = "UPDATE combo_meals SET name='$name', description='$description', main_dish='$main_dish', side_dish='$side_dish', drink='$drink', price='$price', discount_percentage='$discount_percentage', category='$category', quantity='$quantity' WHERE combo_id='$update_id'"; 
+
     if ($quantity < $low_stock_threshold) {
         $message = "Alert: Stock quantity is below the threshold.";
     } else {
-        $sql = "UPDATE combo_meals SET name='$name', description='$description', main_dish='$main_dish', side_dish='$side_dish', drink='$drink', price='$price', discount_percentage='$discount_percentage', category='$category', quantity='$quantity' WHERE id='$update_id'"; // Added
         if (mysqli_query($conn, $sql)) {
+            // Log the action
+            $logDetails = "Updated combo meal ID: $update_id";
+            logAction('Update Combo Meal', $logDetails);
+
             $message = "Combo meal details have been successfully updated. You will now be redirected to the combo meal page.";
             echo '<meta http-equiv="refresh" content="4;url=admin_combo.php">';
         } else {
@@ -219,48 +227,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_combo'])) {
                     </div>
                     <div class="form-group">
                         <label for="price">Price</label>
-                        <input type="number" class="form-control" id="price" name="price" value="<?php echo $price; ?>" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" value="<?php echo $quantity; ?>" min="1" required>
+                        <input type="number" class="form-control" id="price" name="price" value="<?php echo $price; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="discount_percentage">Discount Percentage</label>
-                        <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="<?php echo $discount_percentage; ?>" min="0" max="100" step="0.01" required>
+                        <input type="number" class="form-control" id="discount_percentage" name="discount_percentage" value="<?php echo $discount_percentage; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
                         <select class="form-control" id="category" name="category" required>
-                            <option value="Morning" <?php if($category == 'Morning') echo 'selected'; ?>>Morning</option>
-                            <option value="Evening" <?php if($category == 'Evening') echo 'selected'; ?>>Evening</option>
+                            <option value="">Select Category</option>
+                            <option value="Morning" <?php if ($category == 'Promo') echo 'selected'; ?>>Morning</option>
+                            <option value="Evening" <?php if ($category == 'Regular') echo 'selected'; ?>>Evening</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="<?php echo $quantity; ?>" required>
+                    </div>
                     <input type="hidden" name="update_id" value="<?php echo $update_id; ?>">
-                    <button type="submit" class="btn btn-block" name="update_combo" onclick="return confirm('Are you sure you want to update this combo meal?')">Update Combo Meal</button>
+                    <button type="submit" class="btn btn-primary" name="update_combo">Update Combo Meal</button>
                 </form>
+                <?php if ($message): ?>
+                <div class="alert-slide">
+                    <p><?php echo $message; ?></p>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    // Slide up the prompt message after 5 seconds
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide && alertSlide.innerText.trim() !== '') {
-            alertSlide.style.animation = 'slideOut 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none'; // Hide the prompt message after sliding up
-            }, 500);
-        }
-    }, 5000);
-</script>
-<?php endif; ?>
-
-<!-- Include necessary JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

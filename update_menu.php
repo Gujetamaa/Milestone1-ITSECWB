@@ -7,6 +7,13 @@ $message = "";
 
 $low_stock_threshold = 10; 
 
+// Logging function
+function logAction($action, $details) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $logMessage = date('[Y-m-d H:i:s]') . ' ' . $action . ': ' . $details . PHP_EOL;
+    error_log($logMessage, 3, $logFile);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     $update_id = $_POST['update_id'];
     $sql = "SELECT * FROM menu_items WHERE menu_item_id = '$update_id'";
@@ -55,20 +62,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_menu'])) {
                 $message = "Error: Image Size Is Too Large";
             } else {
                 $newImageName = uniqid() . '.' . $imageExtension;
-                move_uploaded_file($tmpName, 'D:/xampp/htdocs/KapeKadaCoffeeShop/images/' . $newImageName);
+                move_uploaded_file($tmpName, 'C:/xampp/htdocs/Milestone1-ITSECWB/images/' . $newImageName);
 
-                $sql = "UPDATE menu_items SET name='$name', price='$price', category='$category', description='$description', stock_quantity='$stock_quantity', image='$newImageName' WHERE id='$update_id'";
+                $sql = "UPDATE menu_items SET name='$name', price='$price', category='$category', description='$description', stock_quantity='$stock_quantity', image='$newImageName' WHERE menu_item_id='$update_id'";
                 if (mysqli_query($conn, $sql)) {
                     $message = "Menu item details have been successfully updated. You will now be redirected to the menu item page.";
+                    logAction('Update Menu Item', 'Menu item updated: ' . $name); // Log the update action
                     echo '<meta http-equiv="refresh" content="4;url=admin_menu.php">';
                 } else {
                     $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
                 }
             }
         } else {
-            $sql = "UPDATE menu_items SET name='$name', price='$price', category='$category', description='$description', stock_quantity='$stock_quantity' WHERE id='$update_id'";
+            $sql = "UPDATE menu_items SET name='$name', price='$price', category='$category', description='$description', stock_quantity='$stock_quantity' WHERE menu_item_id='$update_id'";
             if (mysqli_query($conn, $sql)) {
                 $message = "Menu item details have been successfully updated. You will now be redirected to the menu item page.";
+                logAction('Update Menu Item', 'Menu item updated: ' . $name); // Log the update action
                 echo '<meta http-equiv="refresh" content="4;url=admin_menu.php">';
             } else {
                 $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
@@ -93,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['upload_xml'])) {
                     $sql = "INSERT INTO menu_items (name, price, category, description, stock_quantity) VALUES ('$name', '$price', '$category', '$description', '$stock_quantity')";
                     if (mysqli_query($conn, $sql)) {
                         $message .= "Menu item '$name' added successfully.<br>";
+                        logAction('Add Menu Item', 'Menu item added: ' . $name); // Log the add action
                         echo '<meta http-equiv="refresh" content="4;url=admin_menu.php">';
                     } else {
                         $message .= "Error adding menu item '$name'.<br>";
@@ -201,78 +211,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['upload_xml'])) {
         <div class="col-md-8">
             <div class="promotion-container">
                 <h2 class="promotion-title">Update Menu Item</h2>
-                <form class="promotion-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+                <?php if (!empty($message)) { ?>
+                    <div class="alert-slide">
+                        <?php echo $message; ?>
+                    </div>
+                <?php } ?>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="update_id" value="<?php echo $update_id; ?>">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" id="name" name="name" value="<?php echo $name; ?>" required>
                     </div>
                     <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" class="form-control" id="price" name="price" min="0.01" step="0.01" value="<?php echo $price; ?>" required>
+                        <label for="price">Price ($)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="price" name="price" value="<?php echo $price; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
-                        <select class="form-control" id="category" name="category" required>
-                            <option value="Mains" <?php if($category == 'Mains') echo 'selected'; ?>>Mains</option>
-                            <option value="Sides" <?php if($category == 'Sides') echo 'selected'; ?>>Sides</option>
-                            <option value="Drink" <?php if($category == 'Drink') echo 'selected'; ?>>Drink</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" required><?php echo $description; ?></textarea>
+                        <input type="text" class="form-control" id="category" name="category" value="<?php echo $category; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="stock_quantity">Stock Quantity</label>
-                        <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" min="0" value="<?php echo $stock_quantity; ?>" required>
+                        <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" value="<?php echo $stock_quantity; ?>" required>
                     </div>
                     <div class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"><?php echo $description; ?></textarea>
                     </div>
-                    <input type="hidden" name="update_id" value="<?php echo $update_id; ?>">
-                    <button type="submit" class="btn btn-block" name="update_menu" onclick="return confirm('Are you sure you want to update this combo meal?')">Update Menu Item</button>
+                    <div class="form-group">
+                        <label for="image">Image (optional)</label>
+                        <input type="file" class="form-control-file" id="image" name="image">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="update_menu">Update Menu Item</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<!-- XML Upload Form -->
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="promotion-container">
-                <h2 class="promotion-title">Upload XML for Bulk Menu Item Addition</h2>
-                <form class="promotion-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="xml_file">Select XML File:</label>
-                        <input type="file" class="form-control-file" id="xml_file" name="xml_file" accept=".xml" required>
-                    </div>
-                    <button type="submit" class="btn btn-block" name="upload_xml">Upload XML</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php if (!empty($message)) : ?>
-<!-- Alert message -->
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide && alertSlide.innerText.trim() !== '') {
-            alertSlide.style.animation = 'slideOut 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none'; 
-            }, 500);
-        }
-    }, 5000);
-</script>
-<?php endif; ?>
-
-<!-- Include necessary JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,9 +1,19 @@
 <?php
+ob_start();
 session_start();
 include 'admin_navbar.php';
 include 'db_connection.php';
 
 $message = "";
+
+// Function to log actions
+function logAction($action)
+{
+    $logfile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $logtime = date("Y-m-d H:i:s");
+    $log_message = "[{$logtime}] {$action}\n";
+    file_put_contents($logfile, $log_message, FILE_APPEND | LOCK_EX);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_specials'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
@@ -18,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_specials'])) {
         $sql = "INSERT INTO specials (name, description, price, start_date, end_date) VALUES ('$name', '$description', '$price', '$start_date', '$end_date')";
         if (mysqli_query($conn, $sql)) {
             $message = "Specials created successfully.";
+            logAction("Specials created: {$name}");
             echo '<meta http-equiv="refresh" content="2;url=admin_specials.php">';
         } else {
             $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
@@ -30,6 +41,7 @@ if(isset($_POST['delete_id'])) {
     $delete_sql = "DELETE FROM specials WHERE specials_id = '$delete_id'";
     if (mysqli_query($conn, $delete_sql)) {
         $message = "Specials successfully deleted.";
+        logAction("Specials deleted: ID {$delete_id}");
         echo '<meta http-equiv="refresh" content="2;url=admin_specials.php">';
     } else {
         $message = "Error deleting specials: " . mysqli_error($conn);
@@ -178,55 +190,56 @@ if (mysqli_num_rows($result) > 0) {
                         <label for="end_date">End Date</label>
                         <input type="date" class="form-control" id="end_date" name="end_date" required>
                     </div>
-                    <button type="submit" class="btn btn-block" name="create_specials">Create Specials</button>
+                    <button type="submit" class="btn btn-primary" name="create_specials">Create Specials</button>
                 </form>
-            </div>
-            <div class="promotion-list">
-                <h3 class="promotion-title">Current Specials</h3>
-                <?php if (!empty($specials)) : ?>
-                    <?php foreach ($specials as $key => $special) : ?>
-                        <div class="promotion-item" id="specials_id<?php echo $key; ?>">
+
+                <?php if (!empty($message)) : ?>
+                    <div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
+                    <script>
+                        setTimeout(function() {
+                            var alertSlide = document.getElementById('alertSlide');
+                            if (alertSlide && alertSlide.innerText.trim() !== '') {
+                                alertSlide.style.animation = 'slideOut 0.5s ease forwards';
+                                setTimeout(function() {
+                                    alertSlide.style.display = 'none';
+                                }, 500);
+                            }
+                        }, 5000);
+                    </script>
+                <?php endif; ?>
+
+                <div class="promotion-list">
+                    <h3>List of Specials</h3>
+                    <?php foreach ($specials as $special) : ?>
+                        <div class="promotion-item">
                             <h4><?php echo $special['name']; ?></h4>
-                            <p>Description: <?php echo $special['description']; ?></p>
-                            <p>Price: <?php echo $special['price']; ?></p>
-                            <p>Start Date: <?php echo $special['start_date']; ?></p>
-                            <p>End Date: <?php echo $special['end_date']; ?></p>
-                            <div class="promotion-buttons">
-                                <form method="post" action="update_specials.php">
-                                    <input type="hidden" name="update_id" value="<?php echo $special['specials_id']; ?>">
-                                    <button type="submit" class="btn btn-primary update-btn">Update</button>
-                                </form>
-                                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <input type="hidden" name="delete_id" value="<?php echo $special['specials_id']; ?>">
-                                    <button type="submit" class="btn btn-danger delete-btn" onclick="return confirm('Are you sure you want to delete this specials?')">Delete</button>
-                                </form>
-                            </div>
+                            <p><strong>Description:</strong> <?php echo $special['description']; ?></p>
+                            <p><strong>Price:</strong> <?php echo $special['price']; ?></p>
+                            <p><strong>Start Date:</strong> <?php echo $special['start_date']; ?></p>
+                            <p><strong>End Date:</strong> <?php echo $special['end_date']; ?></p>
+                            <form method="post" action="update_specials.php">
+                                <input type="hidden" name="update_id" value="<?php echo $special['specials_id']; ?>">
+                                <button type="submit" class="btn btn-primary update-btn">Update</button>
+                            </form>
+                            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                                <input type="hidden" name="delete_id" value="<?php echo $special['specials_id']; ?>">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
                         </div>
                     <?php endforeach; ?>
-                <?php else : ?>
-                    <p>No specials available.</p>
-                <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide && alertSlide.innerText.trim() !== '') {
-            alertSlide.style.animation = 'slideOut 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none';
-            }, 500);
-        }
-    }, 5000);
-</script>
-<?php endif; ?>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<!-- Bootstrap JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php
+ob_end_flush();
+?>

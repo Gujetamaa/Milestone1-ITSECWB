@@ -1,10 +1,26 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 include 'admin_navbar.php';
 include 'db_connection.php';
 
 $message = ""; 
 
+// Function to log actions 
+function logAction($action, $details) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $timestamp = date('[Y-m-d H:i:s]');
+
+    // Prepare log message
+    $logMessage = "$timestamp [$action] $details" . PHP_EOL;
+
+    // Append to log file
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
+
+// Handle update request
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     $update_id = $_POST['update_id'];
     $sql = "SELECT * FROM specials WHERE specials_id = '$update_id'";
@@ -12,44 +28,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_id'])) {
     if (mysqli_num_rows($result) == 1) {
         $special = mysqli_fetch_assoc($result);
     } else {
-       
         $_SESSION['message'] = "Specials not found.";
         header("Location: admin_specials.php");
         exit();
     }
 } else {
-    
     $_SESSION['message'] = "Invalid request to update specials.";
     header("Location: admin_specials.php");
     exit();
 }
 
-
-$name = isset($_POST['name']) ? $_POST['name'] : $special['name'];
-$description = isset($_POST['description']) ? $_POST['description'] : $special['description'];
-$price = isset($_POST['price']) ? $_POST['price'] : $special['price'];
-$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : $special['start_date'];
-$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : $special['end_date'];
-
+// Handle form submission for updating specials
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_special'])) {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
     $price = isset($_POST['price']) ? $_POST['price'] : '';
     $update_id = isset($_POST['update_id']) ? $_POST['update_id'] : '';
-
     $start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
     $end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
 
-    if ($start_date > $end_date) {
-        $message = "End date should be after start date.";
+    // Validate price
+    if (!is_numeric($price)) {
+        $message = "Price should be a valid number.";
     } else {
-        $sql = "UPDATE specials SET name='$name', description='$description', price='$price', start_date='$start_date', end_date='$end_date' WHERE id='$update_id'";
-        if (mysqli_query($conn, $sql)) {
-            $message = "Specials details have been successfully updated. You will now be redirected to the specials page.";
-            echo '<meta http-equiv="refresh" content="4;url=admin_specials.php">';
+        // Validate date range
+        if ($start_date > $end_date) {
+            $message = "End date should be after start date.";
         } else {
-            $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
-        }        
+            // Update SQL query
+            $sql = "UPDATE specials SET name='$name', description='$description', price='$price', start_date='$start_date', end_date='$end_date' WHERE specials_id='$update_id'";
+            
+            // Execute SQL query
+            if (mysqli_query($conn, $sql)) {
+                $message = "Specials details have been successfully updated.";
+                logAction('UPDATE_SPECIALS', "Updated specials: $name");
+                $_SESSION['message'] = $message;
+                echo '<meta http-equiv="refresh" content="2;url=admin_specials.php">';
+                exit();
+            } else {
+                $message = "Error updating specials: " . mysqli_error($conn);
+            }        
+        }
     }
 }
 ?>
@@ -132,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_special'])) {
         <div class="col-md-8">
             <div class="promotion-container">
                 <h2 class="promotion-title">Update Specials</h2>
-                <form class="promotion-form" id="updateForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                <form class="promotion-form" id="updateForm" method="post" action="">
                     <div class="form-group">
                         <label for="name">Specials Name</label>
                         <input type="text" class="form-control" id="name" name="name" value="<?php echo $special['name']; ?>" required>
@@ -140,6 +159,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_special'])) {
                     <div class="form-group">
                         <label for="description">Description</label>
                         <input type="text" class="form-control" id="description" name="description" value="<?php echo $special['description']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="text" class="form-control" id="price" name="price" value="<?php echo $special['price']; ?>" required>
                     </div>
                     <div class="form-group">
                         <label for="start_date">Start Date</label>

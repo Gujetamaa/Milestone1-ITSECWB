@@ -2,29 +2,40 @@
 session_start();
 include 'db_connection.php';
 
+// Function to log actions to user_actions.log
+function logAction($action) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+    $logTime = date('Y-m-d H:i:s');
+    $logMessage = "[$logTime] $action" . PHP_EOL;
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
+// Check if cart exists in session
 if (isset($_SESSION['cart'])) {
     $totalPrice = 0;
 
+    // Fetch menu items from database
     $menuItemsQuery = "SELECT * FROM menu_items";
     $menuItemsResult = mysqli_query($conn, $menuItemsQuery);
     $menuItems = [];
     if ($menuItemsResult) {
         while ($menuItem = mysqli_fetch_assoc($menuItemsResult)) {
-            $menuItems[$menuItem['id']] = $menuItem;
+            $menuItems[$menuItem['menu_item_id']] = $menuItem;
         }
     }
 
+    // Fetch combo meals from database
     $combosQuery = "SELECT * FROM combo_meals";
     $combosResult = mysqli_query($conn, $combosQuery);
     $combos = [];
     if ($combosResult) {
         while ($combo = mysqli_fetch_assoc($combosResult)) {
-            $combos[$combo['id']] = $combo;
+            $combos[$combo['combo_id']] = $combo;
         }
     }
 
+    // Calculate total price considering discounts
     $numComboDeals = count($_SESSION['cart']['combos']);
-
     if ($numComboDeals == 1) {
         $discountPercentage = 0.10; // 10% discount for 1 combo deal
     } elseif ($numComboDeals == 2) {
@@ -35,6 +46,7 @@ if (isset($_SESSION['cart'])) {
         $discountPercentage = 0; // no discount if no combo deals
     }
 
+    // Calculate total price for items and combos in cart
     if (isset($_SESSION['cart']['items'])) {
         foreach ($_SESSION['cart']['items'] as $itemId => $details) {
             $itemPrice = $menuItems[$itemId]['price']; 
@@ -49,12 +61,14 @@ if (isset($_SESSION['cart'])) {
         }
     }
 
+    // Apply discount
     $totalPrice -= $totalPrice * $discountPercentage;
 } else {
     header('Location: cart.php');
     exit;
 }
 
+// Fetch user information if logged in
 if (isset($_SESSION['email'])) {
     $userEmail = $_SESSION['email'];
     if (isset($_SESSION['client_info'][$userEmail])) {
@@ -68,15 +82,18 @@ if (isset($_SESSION['email'])) {
         }
     }
 } else {
+    // Serialize cart for non-logged in users
     if (isset($_SESSION['cart'])) {
         $_SESSION['cart_serialized'] = serialize($_SESSION['cart']);
     }
 }
 
+// Retrieve client name and address for form pre-filling
 $clientName = isset($clientInfo['name']) ? htmlspecialchars($clientInfo['name']) : '';
 $clientAddress = isset($clientInfo['address']) ? htmlspecialchars($clientInfo['address']) : '';
 $newAddress = '';
 
+// Update client info from last order if available
 if (isset($_SESSION['last_order_info'])) {
     $lastOrderInfo = $_SESSION['last_order_info'];
     if (isset($lastOrderInfo['name'])) {
@@ -86,6 +103,10 @@ if (isset($_SESSION['last_order_info'])) {
         $clientAddress = htmlspecialchars($lastOrderInfo['address']);
     }
 }
+
+// Log user action: Accessing checkout page
+logAction("User accessed checkout page.");
+
 ?>
 
 <!DOCTYPE html>
@@ -152,6 +173,16 @@ if (isset($_SESSION['last_order_info'])) {
         <button type="submit" class="btn btn-primary">Pay</button>
     </form>
 </div>
+
+<?php
+
+// Log user action: Submitting order
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    logAction("User submitted an order.");
+}
+
+?>
+
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

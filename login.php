@@ -2,6 +2,14 @@
 // Start the session
 session_start();
 
+// Logging function
+function logAction($action, $details = '') {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/login_actions.log'; // Adjust path and filename as needed
+    $timestamp = date('Y-m-d H:i:s');
+    $logMessage = "[{$timestamp}] [{$action}] {$details}\n";
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = ['items' => [], 'combos' => []];
 }
@@ -96,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Increment login attempts
         $login_attempts = $user['login_attempts'] + 1;
- 
 
         // Update login attempts
         //$sql = "UPDATE users SET login_attempts = $login_attempts WHERE email='$email'";
@@ -107,6 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (is_banned($email)) {
             if ($login_attempts == 3) {
                 $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
+                logAction('Login', "User {$email} temporarily banned due to multiple failed login attempts");
             } elseif ($login_attempts >= 4){
                 $message = "Access denied. Please try again later.";
             }
@@ -141,6 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Redirect to index.php after 4 seconds
                     echo '<meta http-equiv="refresh" content="4;url=index.php">';
                 } 
+                logAction('Login', "Successful login by {$user['email']}");
             } else {
                 if ($login_attempts == 3) { //EDITED THIS LINE
                     $ban_time = time() + 300; // Ban for 5 minutes
@@ -149,10 +158,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     mysqli_query($conn, $sql);
                     
                     $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
-                    
+                    logAction('Login', "User {$email} temporarily banned due to multiple failed login attempts");
                 } else {
                     $message = "Incorrect password. Please try again.";
-
+                    logAction('Login', "Failed login attempt for {$email}");
                 }
 
                  // Store message in session and redirect
@@ -178,7 +187,6 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message']);
 }
 ?>
-
 
 
 <!DOCTYPE html>
@@ -225,86 +233,50 @@ if (isset($_SESSION['message'])) {
             background-color: #A52A2A;
             color: #FFFFFF;
         }
-        .signup-link {
+        .btn-login:hover {
+            background-color: #6B4F4E; /* Darker brown on hover for contrast */
+        }
+        .login-footer {
+            margin-top: 15px;
             text-align: center;
-            margin-top: 20px;
-        }
-        .signup-link a {
-            color: #A52A2A;
-            text-decoration: none;
-        }
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-        .alert-slide {
-            position: fixed;
-            top: 170px; /* Adjusted top position to be below the navbar */
-            left: 20px; /* Adjusted left position */
-            z-index: 9999;
-            background-color: #A52A2A;
-            color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 8px;
-            animation: slideIn 0.5s ease forwards;
-        }
-        @keyframes slideIn {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 20px; /* Slide in from the left */
-            }
-        }
-        @keyframes slideOut {
-            0% {
-                left: 20px;
-            }
-            100% {
-                left: -100%; /* Slide out to the left */
-            }
         }
     </style>
 </head>
 <body>
-
-<div class="container login-container">
+    <!-- Navigation Bar -->
+    <?php echo $navbar; ?>
+    
+    <div class="container login-container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form class="login-form" method="post" action="">
-                    <h2 class="login-title">Login</h2>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                <div class="login-form">
+                    <h2 class="login-title">User Login</h2>
+                    <!-- Display messages here -->
+                    <?php if (!empty($message)) { ?>
+                        <div class="alert alert-danger"><?php echo $message; ?></div>
+                    <?php } ?>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-login btn-block">Login</button>
+                    </form>
+                    <div class="login-footer">
+                        Don't have an account? <a href="signup.php">Sign Up</a>
                     </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="btn btn-block btn-login">Login</button>
-                    <div class="signup-link">
-                        <a href="signup.php">Don't have an account? Sign Up</a>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
-<!-- Display slide prompt message if set -->
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide) {
-            alertSlide.style.animation = 'slideIn 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none'; 
-            }, 5000);
-        }
-    }, 500);
-</script>
-<?php endif; ?>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-

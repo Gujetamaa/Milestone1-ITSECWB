@@ -2,7 +2,7 @@
 include 'navbar.php';
 include 'db_connection.php';
 
-$itemId = $_GET['menu_item_id'] ?? '';
+$itemId = $_GET['id'] ?? '';
 
 // Fetch item details from the database
 $sql = "SELECT * FROM menu_items WHERE menu_item_id = '$itemId'";

@@ -7,6 +7,18 @@ $message = "";
 
 $low_stock_threshold = 10; 
 
+// Function to log actions to admin_actions.log
+function logAction($action, $details) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $timestamp = date('[Y-m-d H:i:s]');
+
+    // Prepare log message
+    $logMessage = "$timestamp [$action] $details" . PHP_EOL;
+
+    // Append to log file
+    file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_item'])) {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $price = isset($_POST['price']) ? $_POST['price'] : '';
@@ -28,13 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['create_item'])) {
             $message = "Error: Image Size Is Too Large";
         } else {
             $newImageName = uniqid() . '.' . $imageExtension;
-            move_uploaded_file($tmpName, 'D:/xampp/htdocs/KapeKadaCoffeeShop/images/' . $newImageName); // Move uploaded image to image directory
+            move_uploaded_file($tmpName, 'C:/xampp/htdocs/Milestone1-ITSECWB/images/' . $newImageName); // Move uploaded image to image directory
 
             $sql = "INSERT INTO menu_items (name, price, category, description, stock_quantity, image) 
                     VALUES ('$name', '$price', '$category', '$description', '$stock_quantity', '$newImageName')";
             
             if (mysqli_query($conn, $sql)) {
                 $message = "Menu item created successfully.";
+                logAction('ADD_MENU_ITEM', "Added menu item: $name");
                 echo '<meta http-equiv="refresh" content="2;url=admin_menu.php">';
             } else {
                 $message = "Error: " . $sql . "<br>" . mysqli_error($conn);
@@ -50,12 +63,14 @@ if(isset($_POST['delete_id'])) {
     $delete_sql = "DELETE FROM menu_items WHERE menu_item_id = '$delete_id'";
     if (mysqli_query($conn, $delete_sql)) {
         $message = "Menu item successfully deleted.";
+        logAction('DELETE_MENU_ITEM', "Deleted menu item with ID: $delete_id");
         echo '<meta http-equiv="refresh" content="2;url=admin_menu.php">';
     } else {
         $message = "Error deleting menu item: " . mysqli_error($conn);
     }
 }
 
+// Fetch menu items
 $sql = "SELECT * FROM menu_items";
 $result = mysqli_query($conn, $sql);
 $menu_items = [];
@@ -219,65 +234,61 @@ if (!empty($low_stock_alerts)) {
                     </div>
                     <div class="form-group">
                         <label for="stock_quantity">Stock Quantity</label>
-                        <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" min="0" required>
+                        <input type="number" class="form-control" id="stock_quantity" name="stock_quantity" required>
                     </div>
                     <div class="form-group">
                         <label for="image">Image</label>
                         <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
                     </div>
-                    <button type="submit" class="btn btn-block" name="create_item">Create Menu Item</button>
+                    <button type="submit" class="btn btn-primary" name="create_item">Create Item</button>
                 </form>
             </div>
 
-            <!-- Display existing menu items -->
+            <?php if (!empty($message)): ?>
+                <div class="alert-slide" id="alert-message">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Display menu items -->
             <div class="promotion-list">
-                <h3 class="promotion-title">Current Menu Items</h3>
-                <?php if (!empty($menu_items)) : ?>
-                    <?php foreach ($menu_items as $key => $menu_item) : ?>
-                        <div class="promotion-item" id="item_<?php echo $key; ?>">
-                            <h4><?php echo $menu_item['name']; ?></h4>
-                            <p>Category: <?php echo $menu_item['category']; ?></p>
-                            <p>Price: ₱<?php echo number_format($menu_item['price'], 2); ?></p>
-                            <p>Description: <?php echo $menu_item['description']; ?></p>
-                            <p>Stock Quantity: <?php echo $menu_item['stock_quantity']; ?></p>
-                            <img src="images/<?php echo $menu_item['image']; ?>" alt="Menu Item Image" width = 200>
-                            <br><br>
-                            <div class="promotion-buttons">
-                                <form method="post" action="update_menu.php">
-                                    <input type="hidden" name="update_id" value="<?php echo $menu_item['menu_item_id']; ?>">
-                                    <button type="submit" class="btn btn-primary update-btn">Update</button>
-                                </form>
-                                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                    <input type="hidden" name="delete_id" value="<?php echo $menu_item['menu_item_id']; ?>">
-                                    <button type="submit" class="btn btn-danger delete-btn" onclick="return confirm('Are you sure you want to delete this menu item?')">Delete</button>
-                                </form>
-                            </div>
+                <h3>Menu Items</h3>
+                <?php foreach ($menu_items as $item): ?>
+                    <div class="promotion-item">
+                        <h4><?php echo $item['name']; ?></h4>
+                        <p><strong>Price:</strong> $<?php echo $item['price']; ?></p>
+                        <p><strong>Category:</strong> <?php echo $item['category']; ?></p>
+                        <p><strong>Description:</strong> <?php echo $item['description']; ?></p>
+                        <p><strong>Stock Quantity:</strong> <?php echo $item['stock_quantity']; ?></p>
+                        <img src="images/<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>" style="max-width: 200px; max-height: 200px;">
+                        <div class="promotion-buttons">
+                            <form method="post" action="update_menu.php">
+                                <input type="hidden" name="update_id" value="<?php echo $item['menu_item_id']; ?>">
+                                <button type="submit" class="btn btn-primary update-btn">Update</button>
+                            </form>
+                        <div class="promotion-buttons">
+                            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                                <input type="hidden" name="delete_id" value="<?php echo $item['menu_item_id']; ?>">
+                                <button type="submit" class="btn btn-danger delete-btn">Delete</button>
+                            </form>
                         </div>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <p>No menu items available.</p>
-                <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
 </div>
 
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
+<!-- Bootstrap JS and custom scripts -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+    // Auto-dismiss alert message after 5 seconds
     setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide && alertSlide.innerText.trim() !== '') {
-            alertSlide.style.animation = 'slideOut 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none';
-            }, 500);
-        }
+        document.getElementById('alert-message').style.animation = 'slideOut 0.5s ease forwards';
     }, 5000);
 </script>
-<?php endif; ?>
 
-<!-- Bootstrap JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php mysqli_close($conn); ?>

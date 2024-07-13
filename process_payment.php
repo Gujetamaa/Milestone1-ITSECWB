@@ -2,6 +2,14 @@
 session_start();
 include 'db_connection.php';
 
+// Logging function
+function logPayment($userId, $totalPaid, $walletAfter) {
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/transactions.log'; 
+    $timestamp = date('Y-m-d H:i:s');
+    $logMessage = "[{$timestamp}] [User ID: {$userId}] Paid ₱{$totalPaid}. Wallet balance after payment: ₱{$walletAfter}\n";
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
 if (!isset($_SESSION['email'])) {
     header("Location: login.php");
     exit;
@@ -21,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $totalQuantity = 0;
 
     foreach ($_SESSION['cart']['items'] as $itemId => $details) {
-        $itemPriceQuery = "SELECT price FROM menu_items WHERE menu_id = $itemId";
+        $itemPriceQuery = "SELECT price FROM menu_items WHERE menu_item_id = $itemId";
         $itemPriceResult = mysqli_query($conn, $itemPriceQuery);
         if ($itemPriceResult && mysqli_num_rows($itemPriceResult) > 0) {
             $itemPrice = mysqli_fetch_assoc($itemPriceResult)['price'];
@@ -41,11 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $userEmail = $_SESSION['email'];
-    $userQuery = "SELECT id, wallet FROM users WHERE email = '$userEmail'";
+    $userQuery = "SELECT user_id, wallet FROM users WHERE email = '$userEmail'";
     $userResult = mysqli_query($conn, $userQuery);
     if ($userResult && mysqli_num_rows($userResult) > 0) {
         $userData = mysqli_fetch_assoc($userResult);
-        $userId = $userData['id'];
+        $userId = $userData['user_id'];
         $userWalletBefore = $userData['wallet']; 
         if ($userWalletBefore < $totalPrice) {
             $message = "Insufficient balance in your wallet. Please add funds.";
@@ -71,13 +79,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             mysqli_query($conn, $insertOrderQuery);
 
             $_SESSION['cart'] = []; 
+
+            // Log payment details
+            $walletResult = mysqli_query($conn, $userQuery);
+            $userWalletAfter = mysqli_fetch_assoc($walletResult)['wallet']; 
+            logPayment($userId, $totalPrice, $userWalletAfter);
+
+            $confirmationMessage = "Thank you, {$customerName}. Your order has been received and will be shipped to {$customerAddress}. Total payment: ₱" . number_format($totalPrice, 2);
         }
     }
-
-    $walletResult = mysqli_query($conn, $userQuery);
-    $userWalletAfter = mysqli_fetch_assoc($walletResult)['wallet']; 
-
-    $confirmationMessage = "Thank you, {$customerName}. Your order has been received and will be shipped to {$customerAddress}. Total payment: ₱" . number_format($totalPrice, 2);
 } else {
     header('Location: checkout.php');
     exit;

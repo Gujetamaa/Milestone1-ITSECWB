@@ -89,28 +89,37 @@ include 'db_connection.php';
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownManage" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Manage
+                    Manage
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownManage">
-                <a class="dropdown-item" href="admin_menu.php">Menu Management</a>
-                <a class="dropdown-item" href="admin_specials.php">Specials Management</a>
-                <a class="dropdown-item" href="admin_combo.php">Combo Meal Management</a>
-                <a class="dropdown-item" href="admin_orders.php">View Orders</a>
+                    <a class="dropdown-item" href="admin_menu.php">Menu Management</a>
+                    <a class="dropdown-item" href="admin_specials.php">Specials Management</a>
+                    <a class="dropdown-item" href="admin_combo.php">Combo Meal Management</a>
                 </div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownManage" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Administrator
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Reports
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownManage">
-                <a class="dropdown-item" href="logout.php">Logout</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                    <a class="dropdown-item" href="admin_report_orders.php">Orders Report</a>
+                    <a class="dropdown-item" href="admin_report_combo_meals.php">Combo Meals Report</a>
+                    <a class="dropdown-item" href="admin_report_menu_items.php">Menu Items Report</a>
+                    <a class="dropdown-item" href="admin_report_specials.php">Specials Report</a>
+                    <a class="dropdown-item" href="admin_report_users.php">Users Report</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdministrator" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Administrator
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownAdministrator">
+                    <a class="dropdown-item" href="logout.php">Logout</a>
                 </div>
             </li>
         </ul>
     </div>
 </nav>
-
-<!-- Your page content here -->
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
