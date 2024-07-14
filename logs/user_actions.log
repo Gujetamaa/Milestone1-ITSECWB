@@ -1,0 +1,23 @@
+[2024-07-13 14:10:12] [TOP_UP_WALLET] User banker@mail.com topped up wallet by ₱999
+[2024-07-13 14:10:27] [TOP_UP_WALLET] User banker@mail.com topped up wallet by ₱200
+[2024-07-13 14:10:32] [TOP_UP_WALLET] User banker@mail.com topped up wallet by ₱2
+[2024-07-13 14:13:11] User accessed checkout page.
+[2024-07-13 14:13:27] User accessed checkout page.
+[2024-07-13 14:13:38] User accessed checkout page.
+[2024-07-13 14:14:19] User accessed checkout page.
+[2024-07-13 14:20:29] User accessed checkout page.
+User ID: unknown | Item ID: 1 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:41:07
+[2024-07-13 14:45:14] User accessed checkout page.
+[2024-07-13 14:45:45] User accessed checkout page.
+[2024-07-13 14:45:48] User accessed checkout page.
+[2024-07-13 14:45:49] User accessed checkout page.
+[2024-07-13 14:45:51] User accessed checkout page.
+[2024-07-13 14:45:52] User accessed checkout page.
+[2024-07-13 14:45:52] User accessed checkout page.
+[2024-07-13 14:45:53] User accessed checkout page.
+[2024-07-13 14:46:23] [TOP_UP_WALLET] User kubo@mail.com topped up wallet by ₱200
+[2024-07-13 14:46:25] User accessed checkout page.
+User ID:  | Item ID: 1 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:48:25
+User ID:  | Item ID: 3 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:48:57
+User ID:  | Item ID: 1 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:49:25
+[2024-07-13 14:51:55] [User Email: banker@mail.com] Action: Add Item to Cart Item ID: 3 Quantity: 1

@@ -76,6 +76,14 @@ function isValidPhoneNumber($phoneNumber) {
     return true;
 }
 
+// Function to log signup actions
+function logSignupAction($userId, $fullname, $wallet) {
+    $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\signup_actions.log';
+    $signupTime = date('Y-m-d H:i:s');
+    $logMessage = "User ID: $userId | Fullname: $fullname | Wallet: $wallet | Signup Time: $signupTime" . PHP_EOL;
+    file_put_contents($logFile, $logMessage, FILE_APPEND);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
@@ -143,23 +151,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if($uploadOk == 1){
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-                // Insert user data into the database with hashed password
-                $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
-                        VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
-    
-                $result = mysqli_query($conn, $sql);
-    
-                if ($result) {
-                    $message = "Welcome, $fullname! Registration successful. Redirecting...";
-                    // Set session variables after successful registration
-                    $_SESSION['email'] = $email;
-                    $_SESSION['fullname'] = $fullname;
-                    $_SESSION['role'] = $role;
-                    // Redirect to index.php after 4 seconds
-                    echo '<meta http-equiv="refresh" content="4;url=index.php">';
-                } else {
-                    $message = "Error: " . mysqli_error($conn);
-                }
+            // Insert user data into the database with hashed password
+            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
+                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
+
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                $userId = mysqli_insert_id($conn); // Get the ID of the inserted user
+                logSignupAction($userId, $fullname, $wallet); // Log signup action
+
+                $message = "Welcome, $fullname! Registration successful. Redirecting...";
+                // Set session variables after successful registration
+                $_SESSION['email'] = $email;
+                $_SESSION['fullname'] = $fullname;
+                $_SESSION['role'] = $role;
+                // Redirect to index.php after 4 seconds
+                echo '<meta http-equiv="refresh" content="4;url=index.php">';
+            } else {
+                $message = "Error: " . mysqli_error($conn);
             }
             // Hash the password with salted rounds
             
@@ -212,103 +222,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-bottom: 20px;
         }
         .btn-signup {
-            background-color: #A52A2A;
+            background-color: #6B4F4E; /* Coffee brown button */
             color: #FFFFFF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-signup:hover {
+            background-color: #A52A2A; /* Darker brown on hover */
         }
         .login-link {
             text-align: center;
             margin-top: 20px;
+            font-size: 14px;
+            color: #6B4F4E; /* Coffee brown link color */
         }
         .login-link a {
-            color: #A52A2A;
+            color: #A52A2A; /* Darker brown link color */
             text-decoration: none;
         }
         .login-link a:hover {
             text-decoration: underline;
         }
-        .alert-slide {
-            position: fixed;
-            top: 170px; /* Adjusted top position to be below the navbar */
-            left: 20px; /* Adjusted left position */
-            z-index: 9999;
-            background-color: #A52A2A;
-            color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 8px;
-            animation: slideIn 0.5s ease forwards;
-        }
-        @keyframes slideIn {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 20px; /* Slide in from the left */
-            }
-        }
-        @keyframes slideOut {
-            0% {
-                left: 20px;
-            }
-            100% {
-                left: -100%; /* Slide out to the left */
-            }
-        }
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.php"><img src="kape-logo.svg" alt="Kape-Kada Coffee Shop" height="40"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.php">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.php">Contact</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="signup.php">Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-<div class="container signup-container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form class="signup-form" method="post" action="signup.php" enctype="multipart/form-data">
-                <h2 class="signup-title">Sign Up</h2>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name" required> 
+    <!-- Sign Up Form -->
+    <div class="container signup-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="signup-form">
+                    <h2 class="signup-title">Sign Up</h2>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+                        <?php if (!empty($message)) : ?>
+                            <div class="alert alert-danger"><?php echo $message; ?></div>
+                        <?php endif; ?>
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" name="fullname" id="fullname" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number</label>
+                            <input type="tel" name="phoneNumber" id="phoneNumber" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea name="address" id="address" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="wallet">Initial Wallet Balance (PHP)</label>
+                            <input type="number" name="wallet" id="wallet" class="form-control" step="any" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile">Profile Picture</label>
+                            <input type="file" name="profile" id="profile" class="form-control-file">
+                        </div>
+                        <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
+                    </form>
+                    <div class="login-link">
+                        <p>Already have an account? <a href="login.php">Log in here</a>.</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" required> 
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required> 
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required> 
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
-                </div>
-                <div class="form-group">
-                    <input type="number" step="0.01" class="form-control" id="wallet" name="wallet" placeholder="Wallet Balance"> 
-                </div>
-                <div class = "form-group">
-                    <input type="file" class="form-control" id="profile" name="profile" placeholder="Upload Your Profile Pic" accept="image/*">
-                </div>
-                <div class="login-link">
-                    <a href="index.php">Already have an account?</a>
-                </div>
-                <button type="submit" class="btn btn-block btn-signup">Sign Up</button>
-                
-            </form> 
+            </div>
+        </div>
     </div>
-</div>
 
-<!-- Display slide prompt message if set -->
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    // Slide up the prompt message after 5 seconds
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide) {
-            alertSlide.style.animation = 'slideIn 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none'; // Hide the prompt message after sliding up
-            }, 5000);
-        }
-    }, 500);
-</script>
-<?php endif; ?>
-
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -1,289 +1,224 @@
 <?php 
-// Start the session
-session_start();
-
-// Include database connection
 include 'db_connection.php';
+include 'navbar.php';
 
-$message = ""; // Initialize the message variable
+$sql = "SELECT * FROM specials";
+$result = mysqli_query($conn, $sql);
 
-// Function to check if the user is banned
-function is_banned($email) {
-    global $conn;
-    //$sql = "SELECT ban_time FROM users WHERE email='$email'";
-    $sql = "SELECT ban_time FROM users WHERE BINARY email='$email'";
-
-    $result = mysqli_query($conn, $sql);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        if ($user['ban_time'] > time()) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// Function to check if ban time has expired
-function is_ban_time_expired($email) {
-    global $conn;
-    //$sql = "SELECT ban_time FROM users WHERE email='$email'";
-    $sql = "SELECT ban_time FROM users WHERE BINARY email='$email'";
-
-    $result = mysqli_query($conn, $sql);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        if ($user['ban_time'] && $user['ban_time'] <= time()) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// Check if the user is already logged in and redirect based on their role
-if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] == 'Administrator') {
-        header("Location: admin.php");
-        exit();
-    } else if ($_SESSION['role'] == 'User') {
-        header("Location: user.php");
-        exit();
-    }
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Check if ban time has expired
-    if (is_ban_time_expired($email)) {
-        // Reset login attempts and ban time
-        //$sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
-        $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE BINARY email='$email'";
-
-        mysqli_query($conn, $sql);
-    }
-
-    // Query to fetch user data based on email
-    //$sql = "SELECT * FROM users WHERE email='$email'";
-    $sql = "SELECT * FROM users WHERE BINARY email='$email'";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        
-        // Increment login attempts
-        $login_attempts = $user['login_attempts'] + 1;
- 
-
-        // Update login attempts
-        //$sql = "UPDATE users SET login_attempts = $login_attempts WHERE email='$email'";
-        $sql = "UPDATE users SET login_attempts = $login_attempts WHERE BINARY email='$email'";
-        
-        mysqli_query($conn, $sql);
-
-        if (is_banned($email)) {
-            if ($login_attempts == 3) {
-                $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
-            } elseif ($login_attempts >= 4){
-                $message = "Access denied. Please try again later.";
-            }
-
-             // Store message in session and redirect
-             $_SESSION['message'] = $message;
-             header("Location: " . $_SERVER['PHP_SELF']);
-             exit();
-        } else {
-            // Verify hashed password
-            if (password_verify($password, $user['password'])) {
-                // Reset login attempts and ban time on successful login
-                //$sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE email='$email'";
-                $sql = "UPDATE users SET login_attempts = 0, ban_time = NULL WHERE BINARY email='$email'";
-
-                mysqli_query($conn, $sql);
-
-                if ($user['role'] == 'Administrator') {
-                    $message = "Welcome back, " . $user['fullname'] . "! You are logged in as an Administrator. Redirecting...";
-                    // Set session variables after successful login
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['fullname'] = $user['fullname'];
-                    $_SESSION['role'] = 'Administrator';
-                    // Redirect to admin.php after 4 seconds
-                    echo '<meta http-equiv="refresh" content="4;url=admin.php">';
-                } else if ($user['role'] == 'User') {
-                    $message = "Welcome back, " . $user['fullname'] . "! You are logged in as a User. Redirecting...";
-                    // Set session variables after successful login
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['fullname'] = $user['fullname'];
-                    $_SESSION['role'] = 'User';
-                    // Redirect to index.php after 4 seconds
-                    echo '<meta http-equiv="refresh" content="4;url=user.php">';
-                } 
-            } else {
-                if ($login_attempts == 3) { //EDITED THIS LINE
-                    $ban_time = time() + 300; // Ban for 5 minutes
-                    //$sql = "UPDATE users SET ban_time = $ban_time WHERE email='$email'";
-                    $sql = "UPDATE users SET ban_time = $ban_time WHERE BINARY email='$email'";
-                    mysqli_query($conn, $sql);
-                    
-                    $message = "Your access has been temporarily disabled for 5 minutes due to multiple failed login attempts. Please try again later.";
-                    
-                } else {
-                    $message = "Incorrect password. Please try again.";
-
-                }
-
-                 // Store message in session and redirect
-                 $_SESSION['message'] = $message;
-                 header("Location: " . $_SERVER['PHP_SELF']);
-                 exit();
-            }
-        }
-    } else {
-        $message = "No user found with this email. Please sign up.";
-
-        // Store message in session and redirect
-            $_SESSION['message'] = $message;
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-    }
-    
-}
-
-// Display message from session if exists and clear it
-if (isset($_SESSION['message'])) {
-    $message = $_SESSION['message'];
-    unset($_SESSION['message']);
-}
+if (mysqli_num_rows($result) > 0) {
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Kape-Kada Coffee Shop</title>
-    <!-- Bootstrap CSS -->
+    <title>Special Promotions - Kape-Kada Coffee Shop</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #F5F5DC; /* Beige background for a warm feel */
-            color: #6B4F4E; /* Coffee brown text for contrast */
-            font-family: 'Montserrat', sans-serif;
-            background-image: url('loginbg.svg');
+            background-image: url('bg.svg');
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed; 
             background-position: center;
+            margin-top: 120px;
         }
         .navbar {
             font-family: 'Merriweather', serif;
         }
-        .login-container {
-            margin-top: 125px;
+        .promotions-section {
+            padding: 60px 0;
         }
-        .login-form {
-            background: #FFFFFF;
+        .promotion-item {
+            background-color: #FFF;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
         }
-        .login-title {
-            color: #A52A2A; /* Rich brown color for titles */
-            font-weight: 700;
-            margin-bottom: 30px;
+        .promotion-item:hover {
+            transform: scale(1.1); 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
         }
-        .form-control {
-            margin-bottom: 20px;
+        .promotion-title {
+            color: #1e1e1e;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
-        .btn-login {
-            background-color: #A52A2A;
-            color: #FFFFFF;
+
+        .promotion-price {
+            color: #cc0000;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
-        .signup-link {
+
+        .promotion-description {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .promotion-duration {
+            color: #777;
+            font-size: 14px;
+            font-style: italic;
+        }
+        h1.text-center {
+            color: white; 
+            font-size: 36px; 
+            font-weight: bold; 
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+            margin-bottom: 30px; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
+        }
+        .banner { 
+            margin: 30px 0; 
+        }
+        
+        .slider-container {
+            display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -webkit-align-items: center;
+            -ms-flex-align: center;
+                align-items: center;
+        gap: 10px;
+        -webkit-border-radius: var(--border-radius-md);
+                border-radius: var(--border-radius-md);
+        overflow: auto hidden;
+        -webkit-scroll-snap-type: inline mandatory;
+            -ms-scroll-snap-type: inline mandatory;
+                scroll-snap-type: inline mandatory;
+        overscroll-behavior-inline: contain;
+        }
+        
+        .slider-item {
+            position: relative;
+            min-width: 100%;
+            max-height: 450px;
+            aspect-ratio: 1 / 1;
+            -webkit-border-radius: var(--border-radius-md);
+                    border-radius: var(--border-radius-md);
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+        
+        .slider-item .banner-img {
+            width: 100%;
+            height: 100%;
+            -o-object-fit: cover;
+                object-fit: cover;
+            -o-object-position: right;
+                object-position: right;
+                border-radius: 5px;
+        }
+        
+        .banner-content {
+            background: hsla(0, 0%, 100%, 0.8);
+            position: absolute;
+            bottom: 25px;
+            left: 25px;
+            right: 25px;
+            padding: 20px 25px;
+            -webkit-border-radius: var(--border-radius-md);
+                    border-radius: var(--border-radius-md);
+        }
+
+        .banner-btn {
+            background: var(--malibec);
+            color: var(--white);
+            width: -webkit-max-content;
+            width: -moz-max-content;
+            width: max-content;
+            font-size: var(--fs-11);
+            font-weight: var(--weight-600);
+            text-transform: uppercase;
+            padding: 4px 10px;
+            -webkit-border-radius: var(--border-radius-sm);
+                    border-radius: var(--border-radius-sm);
+            -webkit-transition: var(--transition-timing);
+            -o-transition: var(--transition-timing);
+            transition: var(--transition-timing);
+            z-index: 1;
+        }
+
+        .banner-btn:hover { background: var(--eerie-black); }.about-section {
+            background-color: #F9F5F1; 
+            padding: 60px 0;
+        }
+
+        .about-heading {
             text-align: center;
-            margin-top: 20px;
+            margin-bottom: 40px;
+            color: #6B4F4E; 
+            font-family: 'Merriweather', serif;
+            font-size: 32px;
         }
-        .signup-link a {
-            color: #A52A2A;
-            text-decoration: none;
-        }
-        .signup-link a:hover {
-            text-decoration: underline;
-        }
-        .alert-slide {
-            position: fixed;
-            top: 170px; /* Adjusted top position to be below the navbar */
-            left: 20px; /* Adjusted left position */
-            z-index: 9999;
-            background-color: #A52A2A;
-            color: #FFFFFF;
-            padding: 10px 20px;
-            border-radius: 8px;
-            animation: slideIn 0.5s ease forwards;
-        }
-        @keyframes slideIn {
-            0% {
-                left: -100%;
-            }
-            100% {
-                left: 20px; /* Slide in from the left */
-            }
-        }
-        @keyframes slideOut {
-            0% {
-                left: 20px;
-            }
-            100% {
-                left: -100%; /* Slide out to the left */
-            }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            color: #6B4F4E; 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-
-<div class="container login-container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form class="login-form" method="post" action="">
-                    <h2 class="login-title">Login</h2>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-                    </div>
-                    <button type="submit" class="btn btn-block btn-login">Login</button>
-                    <div class="signup-link">
-                        <a href="signup.php">Don't have an account? Sign Up</a>
-                    </div>
-                </form>
+<div class="banner">
+    <div class="container">
+        <div class="slider-container has-scrollbar">
+            <div class="slider-item">
+                <img src="banner.svg" alt="bg1 banner" class="banner-img">
+            </div>
+            <div class="slider-item">
+                <img src="banner2.svg" alt="bg2 banner" class="banner-img">
             </div>
         </div>
     </div>
-
-<!-- Display slide prompt message if set -->
-<?php if (!empty($message)) : ?>
-<div class="alert-slide" id="alertSlide"><?php echo $message; ?></div>
-<script>
-    // Slide up the prompt message after 5 seconds
-    setTimeout(function() {
-        var alertSlide = document.getElementById('alertSlide');
-        if (alertSlide) {
-            alertSlide.style.animation = 'slideIn 0.5s ease forwards';
-            setTimeout(function() {
-                alertSlide.style.display = 'none'; // Hide the prompt message after sliding up
-            }, 5000);
-        }
-    }, 500);
-</script>
-<?php endif; ?>
+</div>
+<div class="container promotions-section">
+    <h1 class="text-center">This Season's Specials</h1>
+    <?php
+    while ($row = mysqli_fetch_assoc($result)) {
+    ?>
+    <div class="promotion-item" onclick="window.location.href='specials_details.php?id=<?php echo $row['specials_id']; ?>';">
+        <h2 class="promotion-title"><?php echo $row['name']; ?></h2>
+        <p class="promotion-description"><?php echo $row['description']; ?></p>
+        <p class="promotion-duration">Duration: <?php echo $row['start_date']; ?> to <?php echo $row['end_date']; ?></p>
+    </div>
+    <?php
+    }
+    ?>
+</div>
+<div class="about-section">
+    <div class="container">
+        <h2 class="about-heading">About Us</h2>
+        <div class="about-content">
+            <p>Welcome to Kape-Kada Coffee Shop, your go-to place for delicious coffee and cozy ambiance. At Kape-Kada, we believe in creating a warm and inviting space where friends can gather, conversations flow, and memories are made over a perfect cup of coffee.</p>
+            <p>Our journey began with a passion for crafting exceptional coffee experiences. From carefully sourced beans to expertly brewed blends, each cup is a testament to our commitment to quality and flavor. But Kape-Kada is more than just a coffee shop; it's a community hub where people come together to unwind, connect, and savor the simple joys of life.</p>
+            <p>Whether you're seeking a peaceful moment alone or catching up with friends, we invite you to join us at Kape-Kada and experience the magic of great coffee and genuine hospitality.</p>
+        </div>
+    </div>
+</div>
 
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
+<?php
+} else {
+    echo "No specials available at the moment.";
+}
+?>
