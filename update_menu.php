@@ -9,7 +9,7 @@ $low_stock_threshold = 10;
 
 // Logging function
 function logAction($action, $details) {
-    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $logFile = 'logs\admin_actions.log';
     $logMessage = date('[Y-m-d H:i:s]') . ' ' . $action . ': ' . $details . PHP_EOL;
     error_log($logMessage, 3, $logFile);
 }

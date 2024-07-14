@@ -3,7 +3,7 @@ session_start();
 
 // Function to log user actions
 function logAction($email, $action) {
-    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/logout_actions.log';
+    $logFile = 'logs\logout_actions.log';
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [User Email: {$email}] Action: {$action}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);

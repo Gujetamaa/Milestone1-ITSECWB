@@ -7,7 +7,7 @@ $message = "";
 
 // Function to log actions to admin_actions.log
 function logAction($action, $details) {
-    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+    $logFile = 'logs\admin_actions.log';
     $timestamp = date('[Y-m-d H:i:s]');
 
     $logMessage = "$timestamp [$action] $details" . PHP_EOL;
