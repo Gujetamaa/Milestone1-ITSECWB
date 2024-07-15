@@ -119,10 +119,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Access denied. Please try again later.";
             }
 
+            /*
              // Store message in session and redirect
              $_SESSION['message'] = $message;
              header("Location: " . $_SERVER['PHP_SELF']);
-             exit();
+             exit();*/
         } else {
             // Verify hashed password
             if (password_verify($password, $user['password'])) {
@@ -164,28 +165,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     logAction('Login', "Failed login attempt for {$email}");
                 }
 
+                /*
                  // Store message in session and redirect
                  $_SESSION['message'] = $message;
                  header("Location: " . $_SERVER['PHP_SELF']);
-                 exit();
+                 exit();*/
             }
         }
     } else {
         $message = "No user found with this email. Please sign up.";
 
+        /*
         // Store message in session and redirect
             $_SESSION['message'] = $message;
             header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
+            exit();*/
     }
     
 }
 
+/*
 // Display message from session if exists and clear it
 if (isset($_SESSION['message'])) {
     $message = $_SESSION['message'];
     unset($_SESSION['message']);
-}
+}*/
 ?>
 
 
