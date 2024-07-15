@@ -167,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['email'] = $email;
                 $_SESSION['fullname'] = $fullname;
                 $_SESSION['role'] = $role;
+        
                 // Redirect to index.php after 4 seconds
                 echo '<meta http-equiv="refresh" content="4;url=index.php">';
             } else {

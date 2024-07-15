@@ -2,6 +2,20 @@
 session_start();
 
 include 'db_connection.php';
+
+$userData = null;
+
+if (isset($_SESSION['email'])) {
+    $userEmail = $_SESSION['email'];
+    $userQuery = "SELECT fullname, picture FROM users WHERE email = ?";
+    $stmt = $conn->prepare($userQuery);
+    $stmt->bind_param("s", $userEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userData = $result->fetch_assoc();
+    $stmt->close();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -81,7 +95,7 @@ include 'db_connection.php';
             color: solid black !important; 
             transition: color 0.3s ease; 
         }
-
+        
     </style>
 </head>
 <body>
@@ -107,12 +121,17 @@ include 'db_connection.php';
             <li class="nav-item">
                 <a class="nav-link" href="checkout.php">Checkout</a>
             </li>
-            <?php if (isset($_SESSION['fullname'])) : ?>
+            <?php if ($userData): ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $_SESSION['fullname']; ?>
+                        <?php if ($userData['picture']): ?>
+                            <img src="<?php echo $userData['picture']; ?>" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;">
+                        <?php endif; ?>
+                        <?php echo $userData['fullname']; ?>
                     </a>
                     <div class="dropdown-menu dropdown-menu-login" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="myaccount.php">My Account</a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="wallet.php">Wallet</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Logout</a>
