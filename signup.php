@@ -1,15 +1,46 @@
 <?php
-
-
-
 // Include database connection
 include 'db_connection.php';
 include 'navbar.php';
 session_start(); // Start session
-
 $message = ""; // Initialize the message variable
 
 $debug = true; 
+
+function one(){
+    two();
+}
+function two(){
+    three();
+} 
+function three(){
+   four();
+}
+
+function four(){
+    $traceLines = callTracer();
+    echo "<pre>";
+    print_r($traceLines);  // Or handle $traceLines as needed
+    echo "</pre>";
+}
+function callTracer(){                        
+   // Start output buffering
+   ob_start();
+    
+   // Print the backtrace to the buffer
+   debug_print_backtrace();
+   
+   // Get the contents of the buffer
+   $backtrace = ob_get_contents();
+   
+   // End output buffering and clean the buffer
+   ob_end_clean();
+   
+   // Split the backtrace string into an array of lines
+   $backtraceLines = explode("\n", $backtrace);
+   return $backtraceLines;
+   
+}
 
 // Check if the user is already logged in and redirect based on their role
 if (isset($_SESSION['role'])) {
@@ -23,6 +54,7 @@ if (isset($_SESSION['role'])) {
 }
 
 function isValidEmail($email) {
+ 
     // Check for the presence of one "@" symbol
     if (substr_count($email, '@') !== 1) {
         return false;
@@ -48,11 +80,12 @@ function isValidEmail($email) {
     if (!preg_match($localPartPattern, $localPart) || !preg_match($domainPattern, $domain)) {
         return false;
     }
-
+    one();
     return true;
 }
 
 function isValidPhoneNumber($phoneNumber) {
+    
     // Check if the phone number starts with "+63"
     if (substr($phoneNumber, 0, 3) === "+63") {
         // Remove "+63" prefix for further validation
@@ -78,7 +111,7 @@ function isValidPhoneNumber($phoneNumber) {
     if (!ctype_digit($phoneNumber)) {
         return false;
     }
-
+    two();
     return true;
 }
 
@@ -89,24 +122,6 @@ function logSignupAction($userId, $fullname, $wallet) {
     $logMessage = "User ID: $userId | Fullname: $fullname | Wallet: $wallet | Signup Time: $signupTime" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
-
-
-// Function to format the stack trace
-function formatStackTrace($trace) {
-    $formattedTrace = "";
-    foreach ($trace as $key => $frame) {
-        $formattedTrace .= "#{$key} ";
-        if (isset($frame['file'])) {
-            $formattedTrace .= $frame['file'] . "(" . $frame['line'] . "): ";
-        }
-        if (isset($frame['class'])) {
-            $formattedTrace .= $frame['class'] . "->";
-        }
-        $formattedTrace .= $frame['function'] . "()\n";
-    }
-    return $formattedTrace;
-}
-
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -156,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Sorry, there was an error uploading your file.";
             }
         }
+        three();
     } else {
         $message = "No file uploaded or upload error.";
         
@@ -165,6 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if (!isValidEmail($email)) {
     if (!isValidPhoneNumber($phoneNumber)) {
         $message = "Invalid email and phone number.";
+
     } else {
         $message = "Invalid email address. Please enter a valid email.";
     }
@@ -172,9 +189,6 @@ if (!isValidEmail($email)) {
 
    if ($debug) {
     // Display detailed error message with stack trace
-    $message = "Error: " . mysqli_error($conn) . "<br>";
-    $message .= "Stack Trace:<br>";
-    $message .= "<pre>" . debug_print_backtrace() . "</pre>";
 }
 
 } else {
@@ -204,61 +218,12 @@ if (!isValidEmail($email)) {
                     // Display generic error message
                     $message = "Registration failed. Please try again later.";
             }
+            four();
         } else {
             $message = "Please fill in all credentials.";
         }
     }
 }
-
-
-
-
-
-
- /*
-    // Validate email and phone number
-    if (!isValidEmail($email)) {
-        if (!isValidPhoneNumber($phoneNumber)) {
-            $message = "Invalid email and phone number.";
-        } else {
-            $message = "Invalid email address. Please enter a valid email.";
-        } 
-    } elseif (!isValidPhoneNumber($phoneNumber)) {
-        $message = "Invalid phone number. Please enter a valid phone number.";
-    } else {
-        // Ensures the password is not empty
-        if (!empty($password)) {
-            if($uploadOk == 1){
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-            // Insert user data into the database with hashed password
-            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
-                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
-
-            $result = mysqli_query($conn, $sql);
-
-            if ($result) {
-                $userId = mysqli_insert_id($conn); // Get the ID of the inserted user
-                logSignupAction($userId, $fullname, $wallet); // Log signup action
-
-                $message = "Welcome, $fullname! Registration successful. Redirecting...";
-                // Set session variables after successful registration
-                $_SESSION['email'] = $email;
-                $_SESSION['fullname'] = $fullname;
-                $_SESSION['role'] = $role;
-                // Redirect to index.php after 4 seconds
-                echo '<meta http-equiv="refresh" content="4;url=index.php">';
-            } else {
-                $message = "Error: " . mysqli_error($conn);
-            }
-            
-        } else {
-            $message = "Please fill in all credentials.";
-        }
-    }
-    }
-    */
-
 }
 ?>
 
