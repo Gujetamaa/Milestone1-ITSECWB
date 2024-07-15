@@ -1,10 +1,15 @@
 <?php
+
+
+
 // Include database connection
 include 'db_connection.php';
 include 'navbar.php';
 session_start(); // Start session
 
 $message = ""; // Initialize the message variable
+
+$debug = true; 
 
 // Check if the user is already logged in and redirect based on their role
 if (isset($_SESSION['role'])) {
@@ -85,6 +90,25 @@ function logSignupAction($userId, $fullname, $wallet) {
     file_put_contents($logFile, $logMessage, FILE_APPEND);
 }
 
+
+// Function to format the stack trace
+function formatStackTrace($trace) {
+    $formattedTrace = "";
+    foreach ($trace as $key => $frame) {
+        $formattedTrace .= "#{$key} ";
+        if (isset($frame['file'])) {
+            $formattedTrace .= $frame['file'] . "(" . $frame['line'] . "): ";
+        }
+        if (isset($frame['class'])) {
+            $formattedTrace .= $frame['class'] . "->";
+        }
+        $formattedTrace .= $frame['function'] . "()\n";
+    }
+    return $formattedTrace;
+}
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
@@ -138,6 +162,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Validate email and phone number
+if (!isValidEmail($email)) {
+    if (!isValidPhoneNumber($phoneNumber)) {
+        $message = "Invalid email and phone number.";
+    } else {
+        $message = "Invalid email address. Please enter a valid email.";
+    }
+} elseif (!isValidPhoneNumber($phoneNumber)) {
+
+   if ($debug) {
+    // Display detailed error message with stack trace
+    $message = "Error: " . mysqli_error($conn) . "<br>";
+    $message .= "Stack Trace:<br>";
+    $message .= "<pre>" . debug_print_backtrace() . "</pre>";
+}
+
+} else {
+    // Ensures the password is not empty
+    if (!empty($password)) {
+        if ($uploadOk == 1) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert user data into the database with hashed password
+            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
+                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
+
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                $userId = mysqli_insert_id($conn); // Get the ID of the inserted user
+                logSignupAction($userId, $fullname, $wallet); // Log signup action
+
+                $message = "Welcome, $fullname! Registration successful. Redirecting...";
+                // Set session variables after successful registration
+                $_SESSION['email'] = $email;
+                $_SESSION['fullname'] = $fullname;
+                $_SESSION['role'] = $role;
+                // Redirect to index.php after 4 seconds
+                echo '<meta http-equiv="refresh" content="4;url=index.php">';
+            } else {
+                    // Display generic error message
+                    $message = "Registration failed. Please try again later.";
+            }
+        } else {
+            $message = "Please fill in all credentials.";
+        }
+    }
+}
+
+
+
+
+
+
+ /*
+    // Validate email and phone number
     if (!isValidEmail($email)) {
         if (!isValidPhoneNumber($phoneNumber)) {
             $message = "Invalid email and phone number.";
@@ -172,13 +251,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 $message = "Error: " . mysqli_error($conn);
             }
-            // Hash the password with salted rounds
             
         } else {
             $message = "Please fill in all credentials.";
         }
     }
-}
+    }
+    */
+
 }
 ?>
 
