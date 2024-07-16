@@ -21,3 +21,12 @@ User ID:  | Item ID: 1 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07
 User ID:  | Item ID: 3 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:48:57
 User ID:  | Item ID: 1 | Item Type: menu_item | Quantity: 1 | Timestamp: 2024-07-13 14:49:25
 [2024-07-13 14:51:55] [User Email: banker@mail.com] Action: Add Item to Cart Item ID: 3 Quantity: 1
+<<<<<<< Updated upstream
+=======
+[2024-07-16 16:53:49] [Update] User bronny@gmail.com updated their information.
+[2024-07-16 16:58:06] [Update] User bronny@gmail.com updated their information.
+[2024-07-16 17:02:45] [Update] User bronny@gmail.com updated their information.
+[2024-07-16 17:19:46] [Update] User lebron@gmail.com updated their information.
+[2024-07-16 17:43:57] [User Email: lebron@mail.com] Action: Add Item to Cart Item ID: 2 Quantity: 1
+[2024-07-16 17:51:13] [User Email: banker@mail.com] Action: Add Item to Cart Item ID: 1 Quantity: 1
+>>>>>>> Stashed changes
