@@ -4,7 +4,7 @@ session_start();
 
 // Logging function
 function logAction($action, $details = '') {
-    $logFile = 'logs\login_actions.log'; // Adjust path and filename as needed
+    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/login_actions.log'; // Adjust path and filename as needed
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [{$action}] {$details}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);

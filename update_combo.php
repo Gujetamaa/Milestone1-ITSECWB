@@ -5,7 +5,7 @@ include 'db_connection.php';
 
 // Function to log  actions
 function logAction($action, $details) {
-    $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\admin_actions.log';
+    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
     $timestamp = date('[Y-m-d H:i:s]');
     $logMessage = "$timestamp [Admin Action] $action: $details\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);

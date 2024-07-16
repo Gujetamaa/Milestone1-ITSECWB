@@ -9,7 +9,7 @@ $message = "";
 // Function to log actions
 function logAction($action)
 {
-    $logfile = 'logs\admin_actions.log';
+    $logfile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
     $logtime = date("Y-m-d H:i:s");
     $log_message = "[{$logtime}] {$action}\n";
     file_put_contents($logfile, $log_message, FILE_APPEND | LOCK_EX);

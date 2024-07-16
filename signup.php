@@ -79,7 +79,7 @@ function isValidPhoneNumber($phoneNumber) {
 
 // Function to log signup actions
 function logSignupAction($userId, $fullname, $wallet) {
-    $logFile = 'logs\signup_actions.log';
+    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/signup_actions.log';
     $signupTime = date('Y-m-d H:i:s');
     $logMessage = "User ID: $userId | Fullname: $fullname | Wallet: $wallet | Signup Time: $signupTime" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);

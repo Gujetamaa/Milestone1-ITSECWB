@@ -9,7 +9,7 @@ $low_stock_threshold = 10;
 
 // Function to log actions to admin_actions.log
 function logAction($action, $details) {
-    $logFile = 'logs\admin_actions.log';
+    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
     $timestamp = date('[Y-m-d H:i:s]');
 
     // Prepare log message

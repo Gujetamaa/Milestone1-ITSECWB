@@ -1,10 +1,12 @@
 <?php 
+// Start the session
+session_start();
 include 'navbar.php'; 
 include 'db_connection.php';
 
 // Function to log actions to user_actions.log
 function logAction($action, $details) {
-    $logFile = 'logs/user_actions.log';
+    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
     $timestamp = date('[Y-m-d H:i:s]');
     $logMessage = "$timestamp [$action] $details" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);
