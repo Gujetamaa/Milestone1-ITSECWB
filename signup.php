@@ -88,6 +88,7 @@ function logSignupAction($userId, $fullname, $wallet) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
+    $birthday = $_POST['birthday']; 
     $password = $_POST['password'];
     $phoneNumber = $_POST['phoneNumber']; // Get phone number
     $role = 'User'; // Default role for signed up users
@@ -153,8 +154,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             // Insert user data into the database with hashed password
-            $sql = "INSERT INTO users (fullname, email, phoneNumber, password, role, wallet, address, picture)
-                    VALUES ('$fullname', '$email', '$phoneNumber', '$hashed_password', '$role', $wallet, '$address', '$picture')";
+            $sql = "INSERT INTO users (fullname, email, phoneNumber, birthday, password, role, wallet, address, picture)
+                    VALUES ('$fullname', '$email', '$phoneNumber', '$birthday','$hashed_password', '$role', $wallet, '$address', '$picture')";
 
             $result = mysqli_query($conn, $sql);
 
@@ -269,6 +270,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email" name="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthday">Birthday</label>
+                            <input type="date" name="birthday" id="birthday" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>

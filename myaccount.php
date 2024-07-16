@@ -12,7 +12,7 @@ function logAction($action, $details) {
 
 if (isset($_SESSION['email'])) {
     $userEmail = $_SESSION['email'];
-    $userQuery = "SELECT fullname, email, phoneNumber, address, picture FROM users WHERE email = '$userEmail'";
+    $userQuery = "SELECT fullname, email, birthday, phoneNumber, address, picture FROM users WHERE email = '$userEmail'";
     $userResult = mysqli_query($conn, $userQuery);
     $userData = mysqli_fetch_assoc($userResult);
 }
@@ -84,7 +84,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullName = $_POST['full_name'];
     $phone = $_POST['phone'];
     $address = $_POST['address'];
-    $newEmail = $_POST['email']; // Get the new email from the form
+    $newEmail = $_POST['email'];
+    $birthday = $_POST['birthday'];
 
     // Validate email and phone number
     if (!isValidEmail($userEmail)) {
@@ -137,9 +138,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Update user information in the database
         if ($uploadOk === 1 || $targetFile === $userData['picture']) {
-            $updateQuery = "UPDATE users SET fullname = ?, phoneNumber = ?, address = ?, picture = ?, email = ? WHERE email = ?";
+            $updateQuery = "UPDATE users SET fullname = ?, phoneNumber = ?, birthday = ?, address = ?, picture = ?, email = ? WHERE email = ?";
             $stmt = $conn->prepare($updateQuery);
-            $stmt->bind_param("ssssss", $fullName, $phone, $address, $targetFile, $newEmail, $userEmail);
+            $stmt->bind_param("sssssss", $fullName, $phone, $birthday, $address, $targetFile, $newEmail, $userEmail);
 
             if ($stmt->execute()) {
                 // Update session email if it has changed
@@ -156,6 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'phoneNumber' => $phone,
                     'address' => $address,
                     'picture' => $targetFile,
+                    'birthday' => $birthday,
                 ];
             } else {
                 $message = "Error updating information: " . $stmt->error;
@@ -286,6 +288,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Welcome <?php echo $userData['fullname']; ?>!</h1>
         <img src="<?php echo $userData['picture']; ?>" alt="Profile Picture" class="profile-picture">
         <p>Email: <?php echo $userData['email']; ?></p>
+        <p>Birthday: <?php echo $userData['birthday']; ?></p>
         <p>Phone: <?php echo $userData['phoneNumber']; ?></p>
         <p>Address: <?php echo $userData['address']; ?></p>
     </div>
@@ -300,6 +303,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" name="email" value="<?php echo $userData['email']; ?>">
+            </div>
+            <div class="form-group">
+                <label for="birthday">Birthday</label>
+                <input type="date" class="form-control" id="birthday" name="birthday" value="<?php echo $userData['birthday']; ?>">
             </div>
             <div class="form-group">
                 <label for="phone">Phone Number</label>

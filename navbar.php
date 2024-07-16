@@ -119,13 +119,16 @@ if (isset($_SESSION['email'])) {
                 <a class="nav-link" href="combos.php">Combo Deals</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="cart.php">Cart</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="checkout.php">Checkout</a>
             </li>
             <?php if ($userData): ?>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <?php if ($userData['picture']): ?>
-                            <img src="<?php echo $userData['picture']; ?>" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;">
+                            <img src="<?php echo $userData['picture']; ?>" alt="Profile Picture" style="width: 35px; height: 35px; border-radius: 50%;">
                         <?php endif; ?>
                         <?php echo $userData['fullname']; ?>
                     </a>

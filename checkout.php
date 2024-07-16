@@ -135,6 +135,7 @@ logAction("User accessed checkout page.");
 </head>
 <body>
 <div class="container">
+    <br><br><br><br><br>
     <h2>Checkout Summary</h2>
     <form action="process_payment.php" method="post">
         <div class="mb-3">
