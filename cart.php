@@ -1,4 +1,14 @@
 <?php
+session_start();
+  
+// Check if the user is logged in and has the role of Administrator
+if (!isset($_SESSION['role'])) {
+    // Redirect to login page or display an error message
+    header("Location: login.php");
+    exit();
+}
+
+include 'navbar.php'; 
 include 'db_connection.php';
 
 session_start();
@@ -95,6 +105,7 @@ mysqli_close($conn);
             margin-right: 10px;
         }
         .white-container {
+            margin-top: 170px;
             background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;

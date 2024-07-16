@@ -1,4 +1,13 @@
 <?php
+session_start(); // Start the session
+    
+/// Check if the user is already logged in and redirect based on their role
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'Administrator') {
+        header("Location: admin.php");
+        exit();
+    }
+}
 include 'navbar.php';
 include 'db_connection.php';
 

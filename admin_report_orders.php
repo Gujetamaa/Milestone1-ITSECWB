@@ -181,6 +181,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generate_report'])) {
 
     <!-- Include necessary JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Timeout duration in milliseconds (15 minutes)
+    const timeoutDuration = 15 * 60 * 1000;
+
+    let logoutTimer;
+
+    function resetLogoutTimer() {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(() => {
+            // Clear session and redirect to logout page when timeout occurs
+            fetch('logout.php', { method: 'POST' })
+                .then(() => {
+                    window.location.href = "index.php";
+                });
+        }, timeoutDuration);
+    }
+
+    // Reset timer on user activity
+    document.addEventListener("mousemove", resetLogoutTimer);
+    document.addEventListener("keypress", resetLogoutTimer);
+
+    // Initial setup of the timer
+    resetLogoutTimer();
+</script>
 </body>
 
 </html>

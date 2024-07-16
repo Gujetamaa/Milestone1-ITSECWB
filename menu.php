@@ -1,6 +1,14 @@
 <?php 
+session_start(); // Start the session
+    
+/// Check if the user is already logged in and redirect based on their role
+if (isset($_SESSION['role'])) {
+    if ($_SESSION['role'] == 'Administrator') {
+        header("Location: admin.php");
+        exit();
+    }
+}
 include 'navbar.php'; 
-
 include 'db_connection.php';
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
@@ -63,6 +71,7 @@ if (mysqli_num_rows($result) > 0) {
 </head>
 <body>
 <div class="container mt-5">
+    <br><br><br>
     <h1 class="text-center mb-4">Our Menu</h1>
     <form action="menu.php" method="get" class="filter-form">
         <div class="form-group">

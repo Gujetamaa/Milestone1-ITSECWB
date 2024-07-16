@@ -1,11 +1,19 @@
 <?php
 session_start();
+  
+// Check if the user is logged in and has the role of Administrator
+if (!isset($_SESSION['role'])) {
+    // Redirect to login page or display an error message
+    header("Location: login.php");
+    exit();
+}
+
 include 'db_connection.php';
 include 'navbar.php';
 
 // Function to log actions to user_actions.log
 function logAction($action) {
-    $logFile = 'logs\user_actions.log';
+    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
     $logTime = date('Y-m-d H:i:s');
     $logMessage = "[$logTime] $action" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);
@@ -131,49 +139,57 @@ logAction("User accessed checkout page.");
         .container {
             margin-top: 80px;
         }
+        .whitecontainer{
+            margin-top: 170px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <br><br><br><br><br>
-    <h2>Checkout Summary</h2>
-    <form action="process_payment.php" method="post">
-        <div class="mb-3">
-            <label for="name" class="form-label">Name:</label>
-            <input type="text" class="form-control" id="name" name="name" value="<?php echo $clientName; ?>" required>
-        </div>
-        
-        <div class="mb-3">
-            <label for="address" class="form-label">Address:</label>
-            <select class="form-control" id="address" name="address">
-                <option value="">Select an existing address or enter a new one...</option>
-                <?php 
-                if($clientAddress !== '') {
-                    echo '<option value="' . $clientAddress . '">' . $clientAddress . '</option>';
-                }
-                ?>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="new_address" class="form-label">Or enter a new address:</label>
-            <input type="text" class="form-control" id="new_address" name="new_address" value="<?php echo $newAddress; ?>">
-        </div>
-        <h4>Items in Your Cart:</h4>
-        <ul>
-            <?php if (isset($_SESSION['cart']['items'])): ?>
-                <?php foreach ($_SESSION['cart']['items'] as $itemId => $details): ?>
-                    <li><?php echo htmlspecialchars($menuItems[$itemId]['name']) . " - Quantity: " . $details['quantity'] . " - Price: ₱" . number_format($menuItems[$itemId]['price'] * $details['quantity'], 2); ?></li>
-                <?php endforeach; ?>
-            <?php endif; ?>
-            <?php if (isset($_SESSION['cart']['combos'])): ?>
-                <?php foreach ($_SESSION['cart']['combos'] as $comboId => $details): ?>
-                    <li><?php echo htmlspecialchars($combos[$comboId]['name']) . " - Quantity: " . $details['quantity'] . " - Price: ₱" . number_format($combos[$comboId]['price'] * $details['quantity'], 2); ?></li>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </ul>
-        <p><strong>Total Price: ₱<?php echo number_format($totalPrice, 2); ?></strong></p>
-        <button type="submit" class="btn btn-primary">Pay</button>
-    </form>
+    <div class="whitecontainer">
+        <h2>Checkout Summary</h2>
+        <form action="process_payment.php" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" value="<?php echo $clientName; ?>" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="address" class="form-label">Address:</label>
+                <select class="form-control" id="address" name="address">
+                    <option value="">Select an existing address or enter a new one...</option>
+                    <?php 
+                    if($clientAddress !== '') {
+                        echo '<option value="' . $clientAddress . '">' . $clientAddress . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="new_address" class="form-label">Or enter a new address:</label>
+                <input type="text" class="form-control" id="new_address" name="new_address" value="<?php echo $newAddress; ?>">
+            </div>
+            <h4>Items in Your Cart:</h4>
+            <ul>
+                <?php if (isset($_SESSION['cart']['items'])): ?>
+                    <?php foreach ($_SESSION['cart']['items'] as $itemId => $details): ?>
+                        <li><?php echo htmlspecialchars($menuItems[$itemId]['name']) . " - Quantity: " . $details['quantity'] . " - Price: ₱" . number_format($menuItems[$itemId]['price'] * $details['quantity'], 2); ?></li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['cart']['combos'])): ?>
+                    <?php foreach ($_SESSION['cart']['combos'] as $comboId => $details): ?>
+                        <li><?php echo htmlspecialchars($combos[$comboId]['name']) . " - Quantity: " . $details['quantity'] . " - Price: ₱" . number_format($combos[$comboId]['price'] * $details['quantity'], 2); ?></li>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </ul>
+            <p><strong>Total Price: ₱<?php echo number_format($totalPrice, 2); ?></strong></p>
+            <button type="submit" class="btn btn-primary">Pay</button>
+        </form>
+    </div>
 </div>
 
 <?php

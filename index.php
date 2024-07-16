@@ -1,11 +1,21 @@
 <?php 
-include 'db_connection.php';
-include 'navbar.php';
+    session_start(); // Start the session
+    
+    /// Check if the user is already logged in and redirect based on their role
+    if (isset($_SESSION['role'])) {
+        if ($_SESSION['role'] == 'Administrator') {
+            header("Location: admin.php");
+            exit();
+        }
+    }
 
-$sql = "SELECT * FROM specials";
-$result = mysqli_query($conn, $sql);
+    include 'db_connection.php';
+    include 'navbar.php';
 
-if (mysqli_num_rows($result) > 0) {
+    $sql = "SELECT * FROM specials";
+    $result = mysqli_query($conn, $sql);
+
+    if (mysqli_num_rows($result) > 0) {
 ?>
 <!DOCTYPE html>
 <html lang="en">

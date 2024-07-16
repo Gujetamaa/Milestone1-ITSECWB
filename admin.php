@@ -1,6 +1,14 @@
 <?php 
-include 'admin_navbar.php'; 
-include 'db_connection.php';
+    session_start(); // Start the session
+    
+    // Check if the user is logged in and has the role of Administrator
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrator') {
+        header("Location: index.php");
+        exit();
+    }
+
+    include 'admin_navbar.php'; 
+    include 'db_connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -53,5 +61,29 @@ include 'db_connection.php';
     <p>This is the admin panel of Kape-Kada Coffee Shop. You can manage menu items, promotions, combo meals, view orders, and more from here.</p>
 </div>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Timeout duration in milliseconds (15 minutes)
+    const timeoutDuration = 15 * 60 * 1000;
+
+    let logoutTimer;
+
+    function resetLogoutTimer() {
+        clearTimeout(logoutTimer);
+        logoutTimer = setTimeout(() => {
+            // Clear session and redirect to logout page when timeout occurs
+            fetch('logout.php', { method: 'POST' })
+                .then(() => {
+                    window.location.href = "index.php";
+                });
+        }, timeoutDuration);
+    }
+
+    // Reset timer on user activity
+    document.addEventListener("mousemove", resetLogoutTimer);
+    document.addEventListener("keypress", resetLogoutTimer);
+
+    // Initial setup of the timer
+    resetLogoutTimer();
+</script>
 </body>
 </html>
