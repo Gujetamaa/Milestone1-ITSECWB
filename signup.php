@@ -3,6 +3,8 @@
 include 'db_connection.php';
 include 'navbar.php';
 session_start(); // Start session
+
+
 $message = ""; // Initialize the message variable
 
 $debug = true; 
@@ -17,31 +19,51 @@ function three(){
    four();
 }
 
-function four(){
+
+function four() {
+    global $message;
     $traceLines = callTracer();
-    echo "<pre>";
-    print_r($traceLines);  // Or handle $traceLines as needed
-    echo "</pre>";
+
+    // Append the stack trace to the message
+    foreach ($traceLines as $line) {
+        $message .= "{$line}\n";
+    }
 }
-function callTracer(){                        
-   // Start output buffering
-   ob_start();
-    
-   // Print the backtrace to the buffer
-   debug_print_backtrace();
-   
-   // Get the contents of the buffer
-   $backtrace = ob_get_contents();
-   
-   // End output buffering and clean the buffer
-   ob_end_clean();
-   
-   // Split the backtrace string into an array of lines
-   $backtraceLines = explode("\n", $backtrace);
-   return $backtraceLines;
-   
+/*
+function callTracer() {
+    ob_start(); // Start output buffering
+    debug_print_backtrace();
+    $backtrace = ob_get_clean(); // Capture the output and clear buffer
+
+    return explode("\n", $backtrace); // Return as an array of lines
+}
+*/
+
+
+
+function callTracer() {
+    // Get the backtrace using debug_backtrace
+    $backtrace = debug_backtrace();
+
+    // Initialize an array for formatted trace lines
+    $formattedTrace = [];
+
+    // Iterate through each call in the backtrace
+    foreach ($backtrace as $index => $call) {
+        // Format the trace line with function name and file location
+        $function = $call['function'] ?? 'unknown function';
+        $file = $call['file'] ?? 'unknown file';
+        $line = $call['line'] ?? 'unknown line';
+        $formattedTrace[] = "[$index] => #$index $function called at [$file:$line]";
+    }
+
+    return $formattedTrace;
 }
 
+
+
+
+   
 // Check if the user is already logged in and redirect based on their role
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] == 'Administrator') {
@@ -80,7 +102,7 @@ function isValidEmail($email) {
     if (!preg_match($localPartPattern, $localPart) || !preg_match($domainPattern, $domain)) {
         return false;
     }
-    one();
+  //  one();
     return true;
 }
 
@@ -111,7 +133,7 @@ function isValidPhoneNumber($phoneNumber) {
     if (!ctype_digit($phoneNumber)) {
         return false;
     }
-    two();
+  //  two();
     return true;
 }
 
@@ -171,27 +193,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $message = "Sorry, there was an error uploading your file.";
             }
         }
-        three();
+     //   three();
     } else {
         $message = "No file uploaded or upload error.";
         
     }
 
     // Validate email and phone number
-if (!isValidEmail($email)) {
-    if (!isValidPhoneNumber($phoneNumber)) {
-        $message = "Invalid email and phone number.";
-
-    } else {
-        $message = "Invalid email address. Please enter a valid email.";
-    }
-} elseif (!isValidPhoneNumber($phoneNumber)) {
-
-   if ($debug) {
-    // Display detailed error message with stack trace
-}
-
-} else {
+    if (!isValidEmail($email) || !isValidPhoneNumber($phoneNumber)) {
+            one(); 
+    }else {
     // Ensures the password is not empty
     if (!empty($password)) {
         if ($uploadOk == 1) {
@@ -218,7 +229,7 @@ if (!isValidEmail($email)) {
                     // Display generic error message
                     $message = "Registration failed. Please try again later.";
             }
-            four();
+            //four();
         } else {
             $message = "Please fill in all credentials.";
         }
