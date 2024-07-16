@@ -7,41 +7,11 @@ session_start(); // Start session
 
 $message = ""; // Initialize the message variable
 
-$debug = true; 
-
-function one(){
-    two();
-}
-function two(){
-    three();
-} 
-function three(){
-   four();
-}
+$debug = false; 
 
 
-function four() {
+function callTracer() {
     global $message;
-    $traceLines = callTracer();
-
-    // Append the stack trace to the message
-    foreach ($traceLines as $line) {
-        $message .= "{$line}\n";
-    }
-}
-/*
-function callTracer() {
-    ob_start(); // Start output buffering
-    debug_print_backtrace();
-    $backtrace = ob_get_clean(); // Capture the output and clear buffer
-
-    return explode("\n", $backtrace); // Return as an array of lines
-}
-*/
-
-
-
-function callTracer() {
     // Get the backtrace using debug_backtrace
     $backtrace = debug_backtrace();
 
@@ -54,11 +24,37 @@ function callTracer() {
         $function = $call['function'] ?? 'unknown function';
         $file = $call['file'] ?? 'unknown file';
         $line = $call['line'] ?? 'unknown line';
-        $formattedTrace[] = "[$index] => #$index $function called at [$file:$line]";
+        
+        // Initialize argument string
+        $argsString = '';
+        if (isset($call['args'])) {
+            $argsArray = array_map(function($arg) {
+                if (is_array($arg)) {
+                    return 'Array';
+                } else if (is_object($arg)) {
+                    return 'Object('.get_class($arg).')';
+                } else if (is_null($arg)) {
+                    return 'NULL';
+                } else if (is_bool($arg)) {
+                    return $arg ? 'true' : 'false';
+                } else if (is_string($arg)) {
+                    return "'$arg'";
+                } else {
+                    return $arg;
+                }
+            }, $call['args']);
+            $argsString = implode(', ', $argsArray);
+        }
+
+        $formattedTrace[] = "[$index] => #$index $function(<b>$argsString</b>) called at [$file:$line]";
     }
 
-    return $formattedTrace;
+    // Append the stack trace to the message
+    foreach ($formattedTrace as $line) {
+        $message .= "{$line}<br>";
+    }
 }
+
 
 
 
@@ -102,12 +98,14 @@ function isValidEmail($email) {
     if (!preg_match($localPartPattern, $localPart) || !preg_match($domainPattern, $domain)) {
         return false;
     }
-  //  one();
+ 
     return true;
 }
 
+
 function isValidPhoneNumber($phoneNumber) {
-    
+    global $message;
+    global $debug;
     // Check if the phone number starts with "+63"
     if (substr($phoneNumber, 0, 3) === "+63") {
         // Remove "+63" prefix for further validation
@@ -115,28 +113,43 @@ function isValidPhoneNumber($phoneNumber) {
 
         // Check if the remaining phone number has exactly 10 digits
         if (strlen($phoneNumber) !== 10) {
+            $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     } else {
         // Check if the phone number starts with "09"
         if (substr($phoneNumber, 0, 2) !== "09") {
+            $message = "<b>ERROR: Invalid Phone Number Prefix </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
 
         // Check if the phone number has exactly 11 digits
         if (strlen($phoneNumber) !== 11) {
+            $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     }
 
     // Check if the remaining phone number contains only numeric digits
     if (!ctype_digit($phoneNumber)) {
+        $message = "<b>ERROR: Phone Number Contains Non-Numeric Characters </b><br>";
+        if($debug){
+            callTracer();
+        }
         return false;
     }
-  //  two();
+
     return true;
 }
-
 // Function to log signup actions
 function logSignupAction($userId, $fullname, $wallet) {
     $logFile = 'logs\signup_actions.log';
@@ -200,8 +213,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Validate email and phone number
-    if (!isValidEmail($email) || !isValidPhoneNumber($phoneNumber)) {
-            one(); 
+    if (!isValidPhoneNumber($phoneNumber) ) {
+      
+        
     }else {
     // Ensures the password is not empty
     if (!empty($password)) {
@@ -229,10 +243,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Display generic error message
                     $message = "Registration failed. Please try again later.";
             }
-            //four();
-        } else {
-            $message = "Please fill in all credentials.";
-        }
+            
+        } 
     }
 }
 }
