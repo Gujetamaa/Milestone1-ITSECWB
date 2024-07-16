@@ -7,11 +7,7 @@ $message = "";
 
 // Function to log actions to admin_actions.log
 function logAction($action, $details) {
-<<<<<<< Updated upstream
-    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
-=======
     $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\admin_actions.log';
->>>>>>> Stashed changes
     $timestamp = date('[Y-m-d H:i:s]');
 
     $logMessage = "$timestamp [$action] $details" . PHP_EOL;

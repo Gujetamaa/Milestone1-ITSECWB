@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
-<<<<<<< Updated upstream
--- Generation Time: Jul 13, 2024 at 10:59 AM
-=======
 -- Generation Time: Jul 16, 2024 at 05:57 PM
->>>>>>> Stashed changes
 -- Server version: 8.0.37
 -- PHP Version: 8.2.12
 
@@ -33,16 +29,6 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `combo_meals` (
   `combo_id` int NOT NULL,
-<<<<<<< Updated upstream
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `main_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `side_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `drink` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `discount_percentage` decimal(5,2) NOT NULL,
-  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-=======
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `description` text COLLATE utf8mb4_general_ci NOT NULL,
   `main_dish` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
@@ -51,7 +37,6 @@ CREATE TABLE `combo_meals` (
   `price` decimal(10,2) NOT NULL,
   `discount_percentage` decimal(5,2) NOT NULL,
   `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
->>>>>>> Stashed changes
   `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -140,27 +125,6 @@ DELIMITER ;
 CREATE TABLE `combo_meals_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-<<<<<<< Updated upstream
-  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `combo_id` int NOT NULL,
-  `old_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `old_main_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_side_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_drink` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_price` decimal(10,2) DEFAULT NULL,
-  `old_discount_percentage` decimal(5,2) DEFAULT NULL,
-  `old_category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_quantity` int DEFAULT NULL,
-  `new_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `new_main_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_side_dish` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_drink` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_price` decimal(10,2) DEFAULT NULL,
-  `new_discount_percentage` decimal(5,2) DEFAULT NULL,
-  `new_category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-=======
   `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
   `combo_id` int NOT NULL,
   `old_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -180,7 +144,6 @@ CREATE TABLE `combo_meals_audit` (
   `new_price` decimal(10,2) DEFAULT NULL,
   `new_discount_percentage` decimal(5,2) DEFAULT NULL,
   `new_category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
->>>>>>> Stashed changes
   `new_quantity` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -192,21 +155,12 @@ CREATE TABLE `combo_meals_audit` (
 
 CREATE TABLE `menu_items` (
   `menu_item_id` int NOT NULL,
-<<<<<<< Updated upstream
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `stock_quantity` int NOT NULL,
-  `image` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
-=======
   `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `description` text COLLATE utf8mb4_general_ci,
   `stock_quantity` int NOT NULL,
   `image` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL
->>>>>>> Stashed changes
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -214,13 +168,8 @@ CREATE TABLE `menu_items` (
 --
 
 INSERT INTO `menu_items` (`menu_item_id`, `name`, `category`, `price`, `description`, `stock_quantity`, `image`) VALUES
-<<<<<<< Updated upstream
-(1, 'Ultimate Cheese Bagel', 'Mains', 180.00, 'A delicious bagel filled with a variety of cheeses.', 43, '660182133258c.webp'),
-(2, 'Breakfast Wrap', 'Mains', 220.00, 'A hearty breakfast wrap filled with eggs, bacon, and cheese.', 48, '660182324c8d0.webp'),
-=======
 (1, 'Ultimate Cheese Bagel', 'Mains', 180.00, 'A delicious bagel filled with a variety of cheeses.', 42, '660182133258c.webp'),
 (2, 'Breakfast Wrap', 'Mains', 220.00, 'A hearty breakfast wrap filled with eggs, bacon, and cheese.', 47, '660182324c8d0.webp'),
->>>>>>> Stashed changes
 (3, 'Italian Grilled Bagel', 'Mains', 200.00, 'Grilled bagel with Italian seasoning and cheese.', 50, '6601825024b2f.webp'),
 (4, 'Meatball Pasta', 'Mains', 240.00, 'Pasta served with homemade meatballs and marinara sauce.', 50, '6601826233d7c.webp'),
 (5, 'Baked Potato', 'Sides', 120.00, 'Baked potato served with butter and sour cream.', 49, '6601827671d9b.webp'),
@@ -304,26 +253,6 @@ DELIMITER ;
 CREATE TABLE `menu_items_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-<<<<<<< Updated upstream
-  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `old_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_price` decimal(10,2) DEFAULT NULL,
-  `old_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `old_stock_quantity` int DEFAULT NULL,
-  `old_image` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_price` decimal(10,2) DEFAULT NULL,
-  `new_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `new_stock_quantity` int DEFAULT NULL,
-  `new_image` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-=======
   `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
   `menu_item_id` int NOT NULL,
   `old_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -350,7 +279,6 @@ INSERT INTO `menu_items_audit` (`audit_id`, `audit_timestamp`, `activity`, `menu
 (1, '2024-07-16 11:46:16', 'U', 2, 'Breakfast Wrap', 'Mains', 220.00, 'A hearty breakfast wrap filled with eggs, bacon, and cheese.', 48, '660182324c8d0.webp', 'Breakfast Wrap', 'Mains', 220.00, 'A hearty breakfast wrap filled with eggs, bacon, and cheese.', 47, '660182324c8d0.webp', 'Administrator', 'Updated Menu Item'),
 (2, '2024-07-16 23:55:20', 'U', 1, 'Ultimate Cheese Bagel', 'Mains', 180.00, 'A delicious bagel filled with a variety of cheeses.', 43, '660182133258c.webp', 'Ultimate Cheese Bagel', 'Mains', 180.00, 'A delicious bagel filled with a variety of cheeses.', 42, '660182133258c.webp', 'Administrator', 'Updated Menu Item');
 
->>>>>>> Stashed changes
 -- --------------------------------------------------------
 
 --
@@ -364,11 +292,7 @@ CREATE TABLE `orders` (
   `total_price` decimal(10,2) NOT NULL,
   `discount_amount` decimal(10,2) NOT NULL,
   `quantity` int NOT NULL,
-<<<<<<< Updated upstream
-  `customer_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-=======
   `customer_address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
->>>>>>> Stashed changes
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -463,21 +387,14 @@ CREATE TABLE `orders_audit` (
   `new_customerAddress` varchar(255) DEFAULT NULL,
   `end_user` varchar(45) DEFAULT NULL,
   `end_reason` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders_audit`
 --
 
 INSERT INTO `orders_audit` (`audit_id`, `audit_timestamp`, `activity`, `order_id`, `user_id`, `order_date`, `old_total_price`, `old_discount_amount`, `old_quantity`, `old_customerAddress`, `new_total_price`, `new_discount_amount`, `new_quantity`, `new_customerAddress`, `end_user`, `end_reason`) VALUES
-<<<<<<< Updated upstream
-(1, '2024-06-23 15:44:12', 'C', 1, 1, '2024-06-23 00:00:00', NULL, NULL, NULL, NULL, 500.00, 0.00, 10, '1411 Taft', 'System', 'Order created'),
-(2, '2024-06-23 15:54:19', 'C', 2, 1, '2024-04-04 00:00:00', NULL, NULL, NULL, NULL, 100.00, 450.00, 1, '1411 taft', 'system_user', 'new order created'),
-(3, '2024-06-23 15:56:50', 'C', 3, 1, '2020-01-01 00:00:00', NULL, NULL, NULL, NULL, 150.00, 150.00, 5, '1411 taft', 'system_user', 'new order created'),
-(4, '2024-06-23 15:59:12', 'C', 4, 1, '2024-06-23 15:59:12', NULL, NULL, NULL, NULL, 500.00, 10.00, 6, '1411 taft', 'system_user', 'new order created');
-=======
 (1, '2024-07-16 23:55:20', 'C', 5, 122, '2024-07-16 23:55:20', NULL, NULL, NULL, NULL, 180.00, 0.00, 1, '1411 taft', 'Administrator', 'new order created');
->>>>>>> Stashed changes
 
 -- --------------------------------------------------------
 
@@ -487,13 +404,8 @@ INSERT INTO `orders_audit` (`audit_id`, `audit_timestamp`, `activity`, `order_id
 
 CREATE TABLE `specials` (
   `specials_id` int NOT NULL,
-<<<<<<< Updated upstream
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-=======
   `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `description` text COLLATE utf8mb4_general_ci NOT NULL,
->>>>>>> Stashed changes
   `price` decimal(8,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
@@ -572,22 +484,6 @@ DELIMITER ;
 CREATE TABLE `specials_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-<<<<<<< Updated upstream
-  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `specials_id` int NOT NULL,
-  `old_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `old_price` decimal(8,2) DEFAULT NULL,
-  `old_startdate` date DEFAULT NULL,
-  `old_enddate` date DEFAULT NULL,
-  `new_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `new_price` decimal(8,2) DEFAULT NULL,
-  `new_startdate` date DEFAULT NULL,
-  `new_enddate` date DEFAULT NULL,
-  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-=======
   `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
   `specials_id` int NOT NULL,
   `old_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -602,7 +498,6 @@ CREATE TABLE `specials_audit` (
   `new_enddate` date DEFAULT NULL,
   `end_user` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `end_reason` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
->>>>>>> Stashed changes
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -625,16 +520,6 @@ INSERT INTO `specials_audit` (`audit_id`, `audit_timestamp`, `activity`, `specia
 
 CREATE TABLE `users` (
   `user_id` int NOT NULL,
-<<<<<<< Updated upstream
-  `fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(330) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `phoneNumber` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `wallet` decimal(10,2) DEFAULT '0.00',
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-=======
   `fullname` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `email` varchar(330) COLLATE utf8mb4_general_ci NOT NULL,
   `phoneNumber` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
@@ -644,7 +529,6 @@ CREATE TABLE `users` (
   `wallet` decimal(10,2) DEFAULT '0.00',
   `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
->>>>>>> Stashed changes
   `login_attempts` int DEFAULT NULL,
   `ban_time` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -653,13 +537,6 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-<<<<<<< Updated upstream
-INSERT INTO `users` (`user_id`, `fullname`, `email`, `phoneNumber`, `password`, `role`, `wallet`, `address`, `picture`, `login_attempts`, `ban_time`) VALUES
-(2, 'John Doe', 'john.doe@example.com', '9876543210', 'password123', 'User', 100.00, '456 Oak Street', '', NULL, NULL),
-(54, 'Jane Smith', 'jane.smith@example.com', '5551234567', 'password456', 'User', 50.00, '789 Maple Avenue', '', NULL, NULL),
-(101, 'Michael Johnson', 'michael.johnson@example.com', '1112223333', 'password789', 'User', 200.00, '101 Pine Road', '', NULL, NULL),
-(115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL);
-=======
 INSERT INTO `users` (`user_id`, `fullname`, `email`, `phoneNumber`, `birthday`, `password`, `role`, `wallet`, `address`, `picture`, `login_attempts`, `ban_time`) VALUES
 (2, 'John Doe', 'john.doe@example.com', '9876543210', '0000-00-00', 'password123', 'User', 100.00, '456 Oak Street', '', NULL, NULL),
 (54, 'Jane Smith', 'jane.smith@example.com', '5551234567', '0000-00-00', 'password456', 'User', 50.00, '789 Maple Avenue', '', NULL, NULL),
@@ -672,7 +549,6 @@ INSERT INTO `users` (`user_id`, `fullname`, `email`, `phoneNumber`, `birthday`, 
 (120, 'anne', 'anne@gmail.com', '09176860046', '2002-08-24', '$2y$10$sb.eS9A0ZBwJWsnh1A7rSe91XiUjimUNd6jtUhudY0nvmEy8Gd4va', 'User', 100.00, 'manila', 'uploads/293066135_768748097491834_8197535814127481849_n.jpg', NULL, NULL),
 (121, 'test1hihi', 'test1@gmail.com', '09176860047', '2024-07-26', '$2y$10$NKdI6w8Jt240m61RaG3g..os4zp5LdRClOJ.ekizzxAM50QI09SZG', 'User', 880.00, 'manila', 'uploads/user.jpeg', 0, NULL),
 (122, 'Banker Joe', 'banker@mail.com', '09176566235', '2001-01-01', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL);
->>>>>>> Stashed changes
 
 --
 -- Triggers `users`
@@ -746,32 +622,6 @@ DELIMITER ;
 CREATE TABLE `users_audit` (
   `audit_id` int NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-<<<<<<< Updated upstream
-  `activity` enum('C','U','D') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_id` int NOT NULL,
-  `old_fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_email` varchar(330) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_phoneNumber` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_wallet` decimal(10,2) DEFAULT NULL,
-  `old_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_login_attempts` int DEFAULT NULL,
-  `old_ban_time` int DEFAULT NULL,
-  `new_fullname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_email` varchar(330) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_phoneNumber` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_wallet` decimal(10,2) DEFAULT NULL,
-  `new_address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_picture` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_login_attempts` int DEFAULT NULL,
-  `new_ban_time` int DEFAULT NULL,
-  `end_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
-=======
   `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
   `user_id` int NOT NULL,
   `old_fullname` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -796,7 +646,6 @@ CREATE TABLE `users_audit` (
   `new_ban_time` int DEFAULT NULL,
   `end_user` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `end_reason` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
->>>>>>> Stashed changes
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -805,9 +654,6 @@ CREATE TABLE `users_audit` (
 
 INSERT INTO `users_audit` (`audit_id`, `audit_timestamp`, `activity`, `user_id`, `old_fullname`, `old_email`, `old_phoneNumber`, `old_password`, `old_role`, `old_wallet`, `old_address`, `old_picture`, `old_login_attempts`, `old_ban_time`, `new_fullname`, `new_email`, `new_phoneNumber`, `new_password`, `new_role`, `new_wallet`, `new_address`, `new_picture`, `new_login_attempts`, `new_ban_time`, `end_user`, `end_reason`) VALUES
 (1, '2024-07-13 16:35:50', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'System', 'Updated user details'),
-<<<<<<< Updated upstream
-(2, '2024-07-13 16:35:50', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'System', 'Updated user details');
-=======
 (2, '2024-07-13 16:35:50', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'System', 'Updated user details'),
 (3, '2024-07-16 01:11:18', 'C', 116, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'justine1', 'justine1@gmail.com', '09176860046', '$2y$10$uMv2wBm8KsSiWywVwK5xmOkZFE6FYD56tjxW8H4d/Vwau3c/R9MQS', 'User', 100.00, '1724 Taft Avenue Pasay City', 'uploads/brown folder.png', NULL, NULL, 'System', 'New user registered'),
 (4, '2024-07-16 01:11:31', 'U', 116, 'justine1', 'justine1@gmail.com', '09176860046', '$2y$10$uMv2wBm8KsSiWywVwK5xmOkZFE6FYD56tjxW8H4d/Vwau3c/R9MQS', 'User', 100.00, '1724 Taft Avenue Pasay City', 'uploads/brown folder.png', NULL, NULL, 'justine1!!!!', 'justine1@gmail.com', '09176860046', '$2y$10$uMv2wBm8KsSiWywVwK5xmOkZFE6FYD56tjxW8H4d/Vwau3c/R9MQS', 'User', 100.00, '1724 Taft Avenue Pasay City', 'uploads/brown folder.png', NULL, NULL, 'System', 'Updated user details'),
@@ -990,7 +836,6 @@ INSERT INTO `users_audit` (`audit_id`, `audit_timestamp`, `activity`, `user_id`,
 (180, '2024-07-16 23:51:04', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 1, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details'),
 (181, '2024-07-16 23:51:20', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9820.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details'),
 (184, '2024-07-16 23:55:20', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9820.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details');
->>>>>>> Stashed changes
 
 --
 -- Indexes for dumped tables
@@ -1033,30 +878,12 @@ ALTER TABLE `orders_audit`
   ADD PRIMARY KEY (`audit_id`);
 
 --
-<<<<<<< Updated upstream
--- Indexes for table `specials`
---
-ALTER TABLE `specials`
-  ADD PRIMARY KEY (`specials_id`);
-
---
-=======
->>>>>>> Stashed changes
 -- Indexes for table `specials_audit`
 --
 ALTER TABLE `specials_audit`
   ADD PRIMARY KEY (`audit_id`);
 
 --
-<<<<<<< Updated upstream
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-
---
-=======
->>>>>>> Stashed changes
 -- Indexes for table `users_audit`
 --
 ALTER TABLE `users_audit`
@@ -1065,40 +892,24 @@ ALTER TABLE `users_audit`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 --
 -- AUTO_INCREMENT for table `combo_meals_audit`
 --
 ALTER TABLE `combo_meals_audit`
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT;
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 --
 -- AUTO_INCREMENT for table `menu_items_audit`
 --
 ALTER TABLE `menu_items_audit`
-<<<<<<< Updated upstream
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT;
-=======
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
->>>>>>> Stashed changes
 
 --
 -- AUTO_INCREMENT for table `orders_audit`
 --
 ALTER TABLE `orders_audit`
-<<<<<<< Updated upstream
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
-=======
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
->>>>>>> Stashed changes
 
 --
 -- AUTO_INCREMENT for table `specials_audit`
@@ -1110,11 +921,7 @@ ALTER TABLE `specials_audit`
 -- AUTO_INCREMENT for table `users_audit`
 --
 ALTER TABLE `users_audit`
-<<<<<<< Updated upstream
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-=======
   MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
->>>>>>> Stashed changes
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

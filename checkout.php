@@ -4,11 +4,7 @@ include 'db_connection.php';
 
 // Function to log actions to user_actions.log
 function logAction($action) {
-<<<<<<< Updated upstream
-    $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
-=======
     $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\user_actions.log';
->>>>>>> Stashed changes
     $logTime = date('Y-m-d H:i:s');
     $logMessage = "[$logTime] $action" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);
