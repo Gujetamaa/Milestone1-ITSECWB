@@ -9,7 +9,11 @@ $message = "";
 // Function to log actions
 function logAction($action)
 {
+<<<<<<< Updated upstream
     $logfile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/admin_actions.log';
+=======
+    $logfile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\admin_actions.log';
+>>>>>>> Stashed changes
     $logtime = date("Y-m-d H:i:s");
     $log_message = "[{$logtime}] {$action}\n";
     file_put_contents($logfile, $log_message, FILE_APPEND | LOCK_EX);

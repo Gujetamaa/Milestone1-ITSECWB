@@ -4,7 +4,11 @@ include 'db_connection.php';
 
 // Function to log user actions
 function logAction($email, $action, $itemId, $quantity) {
+<<<<<<< Updated upstream
     $logFile = 'C:/xampp/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+=======
+    $logFile = 'C:\xampp\htdocs\Milestone1-ITSECWB\logs\user_actions.log';
+>>>>>>> Stashed changes
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [User Email: {$email}] Action: {$action} Item ID: {$itemId} Quantity: {$quantity}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);
