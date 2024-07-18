@@ -1,13 +1,13 @@
 <?php
-session_start(); 
-    
+    session_start(); 
+    include 'db_connection.php';
     // Check if the user is logged in and has the role of Administrator
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Administrator') {
         header("Location: index.php");
         exit();
     }
 
-include 'db_connection.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -120,9 +120,12 @@ include 'db_connection.php';
                     Administrator
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownAdministrator">
+                    <a class="dropdown-item" href="admin_debug_register.php">Debug: Register</a>
+                    <a class="dropdown-item" href="admin_debug_login.php">Debug: Login</a>
                     <a class="dropdown-item" href="logout.php">Logout</a>
                 </div>
             </li>
+           
         </ul>
     </div>
 </nav>

@@ -1,5 +1,7 @@
 <?php 
-    session_start(); // Start the session
+ include 'db_connection.php';
+ include 'navbar.php';
+
     
     /// Check if the user is already logged in and redirect based on their role
     if (isset($_SESSION['role'])) {
@@ -9,9 +11,7 @@
         }
     }
 
-    include 'db_connection.php';
-    include 'navbar.php';
-
+   
     $sql = "SELECT * FROM specials";
     $result = mysqli_query($conn, $sql);
 

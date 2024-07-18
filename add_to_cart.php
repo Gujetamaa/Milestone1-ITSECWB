@@ -4,7 +4,7 @@ include 'db_connection.php';
 
 // Function to log user actions
 function logAction($email, $action, $itemId, $quantity) {
-    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+    $logFile = 'logs\user_actions.log';
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [User Email: {$email}] Action: {$action} Item ID: {$itemId} Quantity: {$quantity}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);

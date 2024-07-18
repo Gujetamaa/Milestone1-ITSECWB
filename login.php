@@ -1,10 +1,15 @@
 <?php 
+
+// Include database connection
+include 'db_connection.php';
+include 'navbar.php';
+
 // Start the session
 session_start();
 
 // Logging function
 function logAction($action, $details = '') {
-    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/login_actions.log'; // Adjust path and filename as needed
+    $logFile = 'logs\login_actions.log'; // Adjust path and filename as needed
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [{$action}] {$details}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);
@@ -14,8 +19,7 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = ['items' => [], 'combos' => []];
 }
 
-// Include database connection
-include 'db_connection.php';
+
 
 if(isset($_COOKIE['cart_data'])) {
     $cookieCartData = unserialize($_COOKIE['cart_data']);
@@ -33,7 +37,7 @@ if (isset($_SESSION['email']) && isset($_SESSION['role'])) {
     }
 }
 
-include 'navbar.php';
+
 
 $message = ""; // Initialize the message variable
 
@@ -248,8 +252,6 @@ if (isset($_SESSION['message'])) {
 </head>
 <body>
     <!-- Navigation Bar -->
-    <?php echo $navbar; ?>
-    
     <div class="container login-container">
         <div class="row justify-content-center">
             <div class="col-md-6">
