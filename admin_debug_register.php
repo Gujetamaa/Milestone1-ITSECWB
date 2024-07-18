@@ -1,8 +1,55 @@
 <?php
     include 'admin_navbar.php';
 
-    $message =  $fullname;
-
+    $message =  "";
+   
+    function callTracer() {
+        global $message;
+        // Get the backtrace using debug_backtrace
+        $backtrace = debug_backtrace();
+    
+        // Initialize an array for formatted trace lines
+        $formattedTrace = [];
+    
+        // Iterate through each call in the backtrace
+        foreach ($backtrace as $index => $call) {
+            // Format the trace line with function name and file location
+            $function = $call['function'] ?? 'unknown function';
+            $file = $call['file'] ?? 'unknown file';
+            $line = $call['line'] ?? 'unknown line';
+            
+            // Initialize argument string
+            $argsString = '';
+            if (isset($call['args'])) {
+                $argsArray = array_map(function($arg) {
+                    if (is_array($arg)) {
+                        return 'Array';
+                    } else if (is_object($arg)) {
+                        return 'Object('.get_class($arg).')';
+                    } else if (is_null($arg)) {
+                        return 'NULL';
+                    } else if (is_bool($arg)) {
+                        return $arg ? 'true' : 'false';
+                    } else if (is_string($arg)) {
+                        return "'$arg'";
+                    } else {
+                        return $arg;
+                    }
+                }, $call['args']);
+                $argsString = implode(', ', $argsArray);
+            }
+    
+            $formattedTrace[] = "[$index] => #$index $function(<b>$argsString</b>) called at [$file:$line]";
+        }
+    
+        // Append the stack trace to the message
+        foreach ($formattedTrace as $line) {
+            $message .= "{$line}<br>";
+        }
+    }
+    
+    
+    
     function isValidEmail($email) {
         // Check for the presence of one "@" symbol
         if (substr_count($email, '@') !== 1) {
@@ -35,34 +82,55 @@
     
     function isValidPhoneNumber($phoneNumber) {
         // Check if the phone number starts with "+63"
+        global $debug;
+        global $message;
         if (substr($phoneNumber, 0, 3) === "+63") {
             // Remove "+63" prefix for further validation
             $phoneNumber = substr($phoneNumber, 3);
-    
+            
             // Check if the remaining phone number has exactly 10 digits
             if (strlen($phoneNumber) !== 10) {
+                $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+                if($debug){
+                    callTracer();
+                }
                 return false;
             }
         } else {
             // Check if the phone number starts with "09"
             if (substr($phoneNumber, 0, 2) !== "09") {
+                $message = "<b>ERROR: Invalid Phone Number Prefix </b><br>";
+                if($debug){
+                    callTracer();
+                }
                 return false;
             }
     
             // Check if the phone number has exactly 11 digits
             if (strlen($phoneNumber) !== 11) {
+                $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+                if($debug){
+                    callTracer();
+                }
                 return false;
             }
         }
     
         // Check if the remaining phone number contains only numeric digits
         if (!ctype_digit($phoneNumber)) {
+            $message = "<b>ERROR: Phone Number Contains Non-Numeric Characters </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     
         return true;
     }
 
+    
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $debug = isset($_POST['debugger']) ? true : false;
     $fullname = $_POST['fullname'];
     $email = $_POST['email'];
     $birthday = $_POST['birthday']; 
@@ -115,25 +183,20 @@
         
     }
 
-    // Validate email and phone number
-    if (!isValidEmail($email)) {
-        if (!isValidPhoneNumber($phoneNumber)) {
-            $message = "Invalid email and phone number.";
-        } else {
-            $message = "Invalid email address. Please enter a valid email.";
-        } 
-    } elseif (!isValidPhoneNumber($phoneNumber)) {
-        $message = "Invalid phone number. Please enter a valid phone number.";
-    } else {
+    
+    if(!isValidPhoneNumber($phoneNumber)) {
+        
+    }else{
         // Ensures the password is not empty
         if (!empty($password)) {
             if($uploadOk == 1){
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $message = "Welcome, $fullname! Registration successful";              
+                $message = "Welcome, $fullname! Registration successful $debug";      
             } 
         }
     }
-          
+  
+}
 ?>
 
 
@@ -248,10 +311,11 @@
                             <input type="file" name="profile" id="profile" class="form-control-file">
                         </div>
                         <button type="submit" class="btn btn-signup btn-block">Sign Up</button>
+
+                        <input type="checkbox" id="debugBox" name = "debugger" value="true" >
+                        <label for="debugBox">Enable Debug Mode</label>
                     </form>
-                    <div class="login-link">
-                      Debug Mode <input type="button" id="toggleButton" class="btn btn-signup btn-block" value="Disabled" onclick="toggleButton()">
-                    </div>
+                      
                 </div>
             </div>
         </div>
@@ -261,16 +325,6 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        function toggleButton() {   
-        var button = document.getElementById("toggleButton");
-        if(button.value == "Disabled") {
-            button.value = "Enabled";;
-        } else {
-            button.value = "Disabled";
-        }
-        
-    }
-    </script>
+  
 </body>
 </html>
