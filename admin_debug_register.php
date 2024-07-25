@@ -243,7 +243,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($password)) {
             if($uploadOk == 1){
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $message = "Welcome, $fullname! Registration successful $debug";      
+                $message = "Welcome, $fullname! Registration successful $debug";
+                logSignupAction($fullname, $wallet, 'SUCCESS', "Tracer called");      
             } 
         }
     }
