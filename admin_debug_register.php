@@ -194,8 +194,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $uploadOk = 1;
         } else {
             $message = "<b>ERROR: File is not an image. </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             $uploadOk = 0;
         }
@@ -203,8 +205,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check file size (e.g., limit to 5MB)
         if ($_FILES['profile']['size'] > 5000000) {
             $message = "<b>ERROR: Your Image is too large.</b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             $uploadOk = 0;
         }
@@ -213,8 +217,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $allowedFileTypes = ['jpg', 'jpeg', 'png'];
         if (!in_array($imageFileType, $allowedFileTypes)) {
             $message = "<b>ERROR: Only JPG, JPEG, and PNG files are allowed.</b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             $uploadOk = 0;
         }
@@ -225,8 +231,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $picture = $targetFile; // Set $picture to the path of the uploaded file
             } else {
                 $message = "<b>ERROR: Sorry, there was an error uploading your file. </b><br>";
+                logSignupAction('Unknown', 'N/A', 'ERROR', $message);
                 if($debug){
                     callTracer();
+                    logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
                 }                                                               
             }
         }
