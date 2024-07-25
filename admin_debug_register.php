@@ -52,7 +52,13 @@
     
     function isValidEmail($email) {
         // Check for the presence of one "@" symbol
+        global $debug;
+        global $message;
         if (substr_count($email, '@') !== 1) {
+            $message= "<b>ERROR: Missing '@' symbol </b><br>";
+                if($debug){
+                    callTracer();
+                }
             return false;
         }
     
@@ -61,11 +67,19 @@
     
         // Check the length of the local part
         if (strlen($localPart) > 64) {
+            $message = "<b>ERROR: Invalid Email Local Part Length </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     
         // Check the length of the domain
         if (strlen($domain) > 255) {
+            $message = "<b>ERROR: Invalid Email Domain Length </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     
@@ -74,6 +88,10 @@
         $domainPattern = '/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
     
         if (!preg_match($localPartPattern, $localPart) || !preg_match($domainPattern, $domain)) {
+            $message = "<b>ERROR: Invalid Email Format </b><br>";
+            if($debug){
+                callTracer();
+            }
             return false;
         }
     
@@ -153,20 +171,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($check !== false) {
                 $uploadOk = 1;
         } else {
-            $message = "File is not an image.";
+            $message = "<b>ERROR: File is not an image. </b><br>";
+            if($debug){
+                callTracer();
+            }
             $uploadOk = 0;
         }
         
         // Check file size (e.g., limit to 5MB)
         if ($_FILES['profile']['size'] > 5000000) {
-            $message = "Your Image is too large.";
+            $message = "<b>ERROR: Your Image is too large.</b><br>";
+            if($debug){
+                callTracer();
+            }
             $uploadOk = 0;
         }
 
         // Allow certain file formats
         $allowedFileTypes = ['jpg', 'jpeg', 'png'];
         if (!in_array($imageFileType, $allowedFileTypes)) {
-            $message = "Only JPG, JPEG, and PNG files are allowed.";
+            $message = "<b>ERROR: Only JPG, JPEG, and PNG files are allowed.</b><br>";
+            if($debug){
+                callTracer();
+            }
             $uploadOk = 0;
         }
         
@@ -175,7 +202,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile)) {
                 $picture = $targetFile; // Set $picture to the path of the uploaded file
             } else {
-                $message = "Sorry, there was an error uploading your file.";
+                $message = "<b>ERROR: Sorry, there was an error uploading your file. </b><br>";
+                if($debug){
+                    callTracer();
+                }                                                               
             }
         }
     } else {
@@ -184,8 +214,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     
-    if(!isValidPhoneNumber($phoneNumber)) {
-        
+    if(!isValidPhoneNumber($phoneNumber) || !isValidEmail($email)){
+      
     }else{
         // Ensures the password is not empty
         if (!empty($password)) {

@@ -121,7 +121,6 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownAdministrator">
                     <a class="dropdown-item" href="admin_debug_register.php">Debug: Register</a>
-                    <a class="dropdown-item" href="admin_debug_login.php">Debug: Login</a>
                     <a class="dropdown-item" href="logout.php">Logout</a>
                 </div>
             </li>
