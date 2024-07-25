@@ -3,6 +3,12 @@
 
     $message =  "";
    
+    function logSignupAction($fullname, $wallet, $type = 'INFO', $details = '') {
+        $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/debug_register.log';
+        $signupTime = date('Y-m-d H:i:s');
+        $logMessage = "[$type] | Fullname: $fullname | Wallet: $wallet | Signup Time: $signupTime | Details: $details" . PHP_EOL;
+        file_put_contents($logFile, $logMessage, FILE_APPEND);
+    }
     function callTracer() {
         global $message;
         // Get the backtrace using debug_backtrace
@@ -56,8 +62,10 @@
         global $message;
         if (substr_count($email, '@') !== 1) {
             $message= "<b>ERROR: Missing '@' symbol </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
                 if($debug){
                     callTracer();
+                    logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
                 }
             return false;
         }
@@ -68,8 +76,10 @@
         // Check the length of the local part
         if (strlen($localPart) > 64) {
             $message = "<b>ERROR: Invalid Email Local Part Length </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             return false;
         }
@@ -77,8 +87,10 @@
         // Check the length of the domain
         if (strlen($domain) > 255) {
             $message = "<b>ERROR: Invalid Email Domain Length </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             return false;
         }
@@ -89,8 +101,10 @@
     
         if (!preg_match($localPartPattern, $localPart) || !preg_match($domainPattern, $domain)) {
             $message = "<b>ERROR: Invalid Email Format </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             return false;
         }
@@ -109,8 +123,10 @@
             // Check if the remaining phone number has exactly 10 digits
             if (strlen($phoneNumber) !== 10) {
                 $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+                logSignupAction('Unknown', 'N/A', 'ERROR', $message);
                 if($debug){
                     callTracer();
+                    logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
                 }
                 return false;
             }
@@ -118,8 +134,10 @@
             // Check if the phone number starts with "09"
             if (substr($phoneNumber, 0, 2) !== "09") {
                 $message = "<b>ERROR: Invalid Phone Number Prefix </b><br>";
+                logSignupAction('Unknown', 'N/A', 'ERROR', $message);
                 if($debug){
                     callTracer();
+                    logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
                 }
                 return false;
             }
@@ -127,8 +145,10 @@
             // Check if the phone number has exactly 11 digits
             if (strlen($phoneNumber) !== 11) {
                 $message = "<b>ERROR: Invalid Phone Number Length </b><br>";
+                logSignupAction('Unknown', 'N/A', 'ERROR', $message);
                 if($debug){
                     callTracer();
+                    logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
                 }
                 return false;
             }
@@ -137,8 +157,10 @@
         // Check if the remaining phone number contains only numeric digits
         if (!ctype_digit($phoneNumber)) {
             $message = "<b>ERROR: Phone Number Contains Non-Numeric Characters </b><br>";
+            logSignupAction('Unknown', 'N/A', 'ERROR', $message);
             if($debug){
                 callTracer();
+                logSignupAction('Unknown', 'N/A', 'ERROR', "Tracer called");
             }
             return false;
         }
