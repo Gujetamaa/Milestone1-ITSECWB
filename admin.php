@@ -63,7 +63,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script>
     // Timeout duration in milliseconds (15 minutes)
-    const timeoutDuration = 2 * 60 * 1000;
+    const timeoutDuration = 15 * 60 * 1000;
 
     let logoutTimer;
 
