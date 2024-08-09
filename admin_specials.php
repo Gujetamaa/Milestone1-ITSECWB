@@ -75,7 +75,99 @@ if (mysqli_num_rows($result) > 0) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        /* Your CSS styles here */
+        body {
+            background-color: #F5F5DC; 
+            color: #6B4F4E; 
+            font-family: 'Montserrat', sans-serif;
+        }
+        .navbar {
+            font-family: 'Merriweather', serif;
+        }
+        .container {
+            margin-top: 70px;
+        }
+        .promotion-container {
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .promotion-title {
+            color: #A52A2A; 
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        .promotion-form input[type="text"],
+        .promotion-form input[type="number"],
+        .promotion-form input[type="date"] {
+            margin-bottom: 20px;
+        }
+        .promotion-form button[type="submit"] {
+            background-color: #A52A2A;
+            color: #FFFFFF;
+        }
+        .promotion-buttons {
+            display: flex;
+        }
+        .promotion-buttons .delete-btn,
+        .promotion-buttons .update-btn {
+            margin-right: 10px;
+        }
+        .promotion-buttons .delete-btn {
+            background-color: #A52A2A;
+            color: #FFFFFF;
+        }
+        .promotion-buttons .update-btn {
+            background-color: #A52A2A;
+            color: #FFFFFF;
+        }
+        .promotion-list {
+            margin-top: 30px;
+        }
+        .promotion-item {
+            background-color: #F9F9F9;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .promotion-item h4 {
+            color: #A52A2A; 
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .promotion-item p {
+            margin-bottom: 5px;
+        }
+        .alert-slide {
+            position: fixed;
+            top: 170px;
+            right: 20px;
+            z-index: 9999;
+            background-color: #A52A2A;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: 8px;
+            animation: slideIn 0.5s ease forwards;
+        }
+        @keyframes slideIn {
+            0% {
+                right: -100%;
+            }
+            100% {
+                right: 20px;
+            }
+        }
+        @keyframes slideOut {
+            0% {
+                right: 20px;
+            }
+            100% {
+                right: -100%; 
+            }
+        }
+        .promotion-list h3 {
+            margin-bottom: 15px;
+        } 
     </style>
 </head>
 <body>
