@@ -13,7 +13,7 @@ include 'navbar.php';
 
 // Function to log actions to user_actions.log
 function logAction($action) {
-    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+    $logFile = 'logs\user_actions.log';
     $logTime = date('Y-m-d H:i:s');
     $logMessage = "[$logTime] $action" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);

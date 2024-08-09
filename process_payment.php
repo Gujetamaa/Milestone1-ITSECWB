@@ -4,7 +4,7 @@ include 'db_connection.php';
 
 // Logging function
 function logPayment($userId, $totalPaid, $walletAfter) {
-    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/transactions.log'; 
+    $logFile = 'logs\transactions.log'; 
     $timestamp = date('Y-m-d H:i:s');
     $logMessage = "[{$timestamp}] [User ID: {$userId}] Paid ₱{$totalPaid}. Wallet balance after payment: ₱{$walletAfter}\n";
     file_put_contents($logFile, $logMessage, FILE_APPEND);

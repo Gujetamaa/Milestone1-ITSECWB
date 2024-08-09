@@ -1,12 +1,20 @@
 <?php 
 // Start the session
 session_start();
+
+// Check if the user is logged in and has the role of Administrator
+if (!isset($_SESSION['role'])) {
+    // Redirect to login page or display an error message
+    header("Location: login.php");
+    exit();
+}
+
 include 'navbar.php'; 
 include 'db_connection.php';
 
 // Function to log actions to user_actions.log
 function logAction($action, $details) {
-    $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/user_actions.log';
+    $logFile = 'logs\user_actions.log';
     $timestamp = date('[Y-m-d H:i:s]');
     $logMessage = "$timestamp [$action] $details" . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND | LOCK_EX);

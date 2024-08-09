@@ -4,7 +4,7 @@
     $message =  "";
    
     function logSignupAction($fullname, $wallet, $type = 'INFO', $details = '') {
-        $logFile = '/Applications/XAMPP/xamppfiles/htdocs/Milestone1-ITSECWB/logs/debug_register.log';
+        $logFile = 'logs\debug_register.log';
         $signupTime = date('Y-m-d H:i:s');
         $logMessage = "[$type] | Fullname: $fullname | Wallet: $wallet | Signup Time: $signupTime | Details: $details" . PHP_EOL;
         file_put_contents($logFile, $logMessage, FILE_APPEND);
