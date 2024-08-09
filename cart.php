@@ -11,7 +11,6 @@ if (!isset($_SESSION['role'])) {
 include 'navbar.php'; 
 include 'db_connection.php';
 
-session_start();
 
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = ['items' => [], 'combos' => []];
