@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2024 at 05:57 PM
--- Server version: 8.0.37
+-- Generation Time: Mar 23, 2025 at 12:43 PM
+-- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,16 +28,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `combo_meals` (
-  `combo_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `main_dish` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `side_dish` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `drink` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `combo_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `main_dish` varchar(255) NOT NULL,
+  `side_dish` varchar(255) NOT NULL,
+  `drink` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `discount_percentage` decimal(5,2) NOT NULL,
-  `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `quantity` int NOT NULL
+  `category` varchar(50) NOT NULL,
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -123,28 +123,28 @@ DELIMITER ;
 --
 
 CREATE TABLE `combo_meals_audit` (
-  `audit_id` int NOT NULL,
+  `audit_id` int(11) NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
-  `combo_id` int NOT NULL,
-  `old_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_description` text COLLATE utf8mb4_general_ci,
-  `old_main_dish` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_side_dish` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_drink` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `activity` enum('C','U','D') NOT NULL,
+  `combo_id` int(11) NOT NULL,
+  `old_name` varchar(255) DEFAULT NULL,
+  `old_description` text DEFAULT NULL,
+  `old_main_dish` varchar(255) DEFAULT NULL,
+  `old_side_dish` varchar(255) DEFAULT NULL,
+  `old_drink` varchar(255) DEFAULT NULL,
   `old_price` decimal(10,2) DEFAULT NULL,
   `old_discount_percentage` decimal(5,2) DEFAULT NULL,
-  `old_category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_quantity` int DEFAULT NULL,
-  `new_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_description` text COLLATE utf8mb4_general_ci,
-  `new_main_dish` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_side_dish` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_drink` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `old_category` varchar(50) DEFAULT NULL,
+  `old_quantity` int(11) DEFAULT NULL,
+  `new_name` varchar(255) DEFAULT NULL,
+  `new_description` text DEFAULT NULL,
+  `new_main_dish` varchar(255) DEFAULT NULL,
+  `new_side_dish` varchar(255) DEFAULT NULL,
+  `new_drink` varchar(255) DEFAULT NULL,
   `new_price` decimal(10,2) DEFAULT NULL,
   `new_discount_percentage` decimal(5,2) DEFAULT NULL,
-  `new_category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_quantity` int DEFAULT NULL
+  `new_category` varchar(50) DEFAULT NULL,
+  `new_quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -154,13 +154,13 @@ CREATE TABLE `combo_meals_audit` (
 --
 
 CREATE TABLE `menu_items` (
-  `menu_item_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `category` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `category` varchar(50) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `stock_quantity` int NOT NULL,
-  `image` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `stock_quantity` int(11) NOT NULL,
+  `image` varchar(60) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -251,24 +251,24 @@ DELIMITER ;
 --
 
 CREATE TABLE `menu_items_audit` (
-  `audit_id` int NOT NULL,
+  `audit_id` int(11) NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `old_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `activity` enum('C','U','D') NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `old_name` varchar(100) DEFAULT NULL,
+  `old_category` varchar(50) DEFAULT NULL,
   `old_price` decimal(10,2) DEFAULT NULL,
-  `old_description` text COLLATE utf8mb4_general_ci,
-  `old_stock_quantity` int DEFAULT NULL,
-  `old_image` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `old_description` text DEFAULT NULL,
+  `old_stock_quantity` int(11) DEFAULT NULL,
+  `old_image` varchar(60) DEFAULT NULL,
+  `new_name` varchar(100) DEFAULT NULL,
+  `new_category` varchar(50) DEFAULT NULL,
   `new_price` decimal(10,2) DEFAULT NULL,
-  `new_description` text COLLATE utf8mb4_general_ci,
-  `new_stock_quantity` int DEFAULT NULL,
-  `new_image` varchar(60) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `new_description` text DEFAULT NULL,
+  `new_stock_quantity` int(11) DEFAULT NULL,
+  `new_image` varchar(60) DEFAULT NULL,
+  `end_user` varchar(255) DEFAULT NULL,
+  `end_reason` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -286,13 +286,13 @@ INSERT INTO `menu_items_audit` (`audit_id`, `audit_timestamp`, `activity`, `menu
 --
 
 CREATE TABLE `orders` (
-  `order_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `order_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `order_date` datetime NOT NULL DEFAULT current_timestamp(),
   `total_price` decimal(10,2) NOT NULL,
   `discount_amount` decimal(10,2) NOT NULL,
-  `quantity` int NOT NULL,
-  `customer_address` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `quantity` int(11) NOT NULL,
+  `customer_address` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -371,24 +371,23 @@ DELIMITER ;
 --
 
 CREATE TABLE `orders_audit` (
-  `audit_id` int NOT NULL,
+  `audit_id` int(11) NOT NULL,
   `audit_timestamp` datetime NOT NULL,
   `activity` enum('C','U','D') NOT NULL,
-  `order_id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `order_date` datetime NOT NULL,
   `old_total_price` decimal(10,2) DEFAULT NULL,
   `old_discount_amount` decimal(10,2) DEFAULT NULL,
-  `old_quantity` int DEFAULT NULL,
+  `old_quantity` int(11) DEFAULT NULL,
   `old_customerAddress` varchar(255) DEFAULT NULL,
   `new_total_price` decimal(10,2) DEFAULT NULL,
   `new_discount_amount` decimal(10,2) DEFAULT NULL,
-  `new_quantity` int DEFAULT NULL,
+  `new_quantity` int(11) DEFAULT NULL,
   `new_customerAddress` varchar(255) DEFAULT NULL,
   `end_user` varchar(45) DEFAULT NULL,
   `end_reason` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 --
 -- Dumping data for table `orders_audit`
@@ -404,9 +403,9 @@ INSERT INTO `orders_audit` (`audit_id`, `audit_timestamp`, `activity`, `order_id
 --
 
 CREATE TABLE `specials` (
-  `specials_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `specials_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
   `price` decimal(8,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL
@@ -483,22 +482,22 @@ DELIMITER ;
 --
 
 CREATE TABLE `specials_audit` (
-  `audit_id` int NOT NULL,
+  `audit_id` int(11) NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
-  `specials_id` int NOT NULL,
-  `old_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_description` text COLLATE utf8mb4_general_ci,
+  `activity` enum('C','U','D') NOT NULL,
+  `specials_id` int(11) NOT NULL,
+  `old_name` varchar(255) DEFAULT NULL,
+  `old_description` text DEFAULT NULL,
   `old_price` decimal(8,2) DEFAULT NULL,
   `old_startdate` date DEFAULT NULL,
   `old_enddate` date DEFAULT NULL,
-  `new_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_description` text COLLATE utf8mb4_general_ci,
+  `new_name` varchar(255) DEFAULT NULL,
+  `new_description` text DEFAULT NULL,
   `new_price` decimal(8,2) DEFAULT NULL,
   `new_startdate` date DEFAULT NULL,
   `new_enddate` date DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `end_user` varchar(255) NOT NULL,
+  `end_reason` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -520,36 +519,41 @@ INSERT INTO `specials_audit` (`audit_id`, `audit_timestamp`, `activity`, `specia
 --
 
 CREATE TABLE `users` (
-  `user_id` int NOT NULL,
-  `fullname` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(330) COLLATE utf8mb4_general_ci NOT NULL,
-  `phoneNumber` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `fullname` varchar(255) NOT NULL,
+  `email` varchar(330) NOT NULL,
+  `phoneNumber` varchar(255) NOT NULL,
   `birthday` date NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `role` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `wallet` decimal(10,2) DEFAULT '0.00',
-  `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `login_attempts` int DEFAULT NULL,
-  `ban_time` int DEFAULT NULL
+  `password` varchar(255) NOT NULL,
+  `role` varchar(255) NOT NULL,
+  `wallet` decimal(10,2) DEFAULT 0.00,
+  `address` varchar(255) DEFAULT NULL,
+  `picture` varchar(255) DEFAULT NULL,
+  `login_attempts` int(11) DEFAULT NULL,
+  `ban_time` int(11) DEFAULT NULL,
+  `verification_token` varchar(64) DEFAULT NULL,
+  `verified` tinyint(1) DEFAULT 0,
+  `otp` varchar(6) DEFAULT NULL,
+  `otp_expiry` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `fullname`, `email`, `phoneNumber`, `birthday`, `password`, `role`, `wallet`, `address`, `picture`, `login_attempts`, `ban_time`) VALUES
-(2, 'John Doe', 'john.doe@example.com', '9876543210', '0000-00-00', 'password123', 'User', 100.00, '456 Oak Street', '', NULL, NULL),
-(54, 'Jane Smith', 'jane.smith@example.com', '5551234567', '0000-00-00', 'password456', 'User', 50.00, '789 Maple Avenue', '', NULL, NULL),
-(101, 'Michael Johnson', 'michael.johnson@example.com', '1112223333', '0000-00-00', 'password789', 'User', 200.00, '101 Pine Road', '', NULL, NULL),
-(115, 'admin', 'admin@example.com', '09176861123', '0000-00-00', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL),
-(116, 'justine anne', 'justine1@gmail.com', '09176860040', '0000-00-00', '$2y$10$ZqWYiEiKpWT3NLooLy/UzuTLxubfvbkJbEFZfhXuhJ0c/yU8vCKWy', 'User', 100.00, '1724 Taft Avenue Pasay Cityyyy Ey ', 'uploads/293066135_768748097491834_8197535814127481849_n.jpg', 0, NULL),
-(117, 'justine2', 'justine2@gmail.com', '09176860046', '0000-00-00', '$2y$10$elzJb1JNHMaxB6M6BWFiduO7EFmMGFxl3tvovKNmsYyuTwAEDOuJG', 'User', 100.00, 'manila', 'uploads/user.jpeg', NULL, NULL),
-(118, 'justine3', 'justine3@gmail.com', '09176860046', '0000-00-00', '$2y$10$id/KB2vEO6Eh3BcogCF1Rea8RyNdveOXK5RGlpRJsvkzdfTRRcn5a', 'User', 100.00, 'manila', 'uploads/taylor.jpeg', 0, NULL),
-(119, 'justine4', 'justine4@gmail.com', '09176860046', '0000-00-00', '$2y$10$p2sCHfPoIrcoKK/6QlwTuekaQvV4L8fEcNZ5EFGx3S/HaRJGYqzNW', 'User', 100.00, 'manila', 'uploads/user.jpeg', 0, NULL),
-(120, 'anne', 'anne@gmail.com', '09176860046', '2002-08-24', '$2y$10$sb.eS9A0ZBwJWsnh1A7rSe91XiUjimUNd6jtUhudY0nvmEy8Gd4va', 'User', 100.00, 'manila', 'uploads/293066135_768748097491834_8197535814127481849_n.jpg', NULL, NULL),
-(121, 'test1hihi', 'test1@gmail.com', '09176860047', '2024-07-26', '$2y$10$NKdI6w8Jt240m61RaG3g..os4zp5LdRClOJ.ekizzxAM50QI09SZG', 'User', 880.00, 'manila', 'uploads/user.jpeg', 0, NULL),
-(122, 'Banker Joe', 'banker@mail.com', '09176566235', '2001-01-01', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL);
+INSERT INTO `users` (`user_id`, `fullname`, `email`, `phoneNumber`, `birthday`, `password`, `role`, `wallet`, `address`, `picture`, `login_attempts`, `ban_time`, `verification_token`, `verified`, `otp`, `otp_expiry`) VALUES
+(2, 'John Doe', 'john.doe@example.com', '9876543210', '0000-00-00', 'password123', 'User', 100.00, '456 Oak Street', '', NULL, NULL, NULL, 0, NULL, NULL),
+(54, 'Jane Smith', 'jane.smith@example.com', '5551234567', '0000-00-00', 'password456', 'User', 50.00, '789 Maple Avenue', '', NULL, NULL, NULL, 0, NULL, NULL),
+(101, 'Michael Johnson', 'michael.johnson@example.com', '1112223333', '0000-00-00', 'password789', 'User', 200.00, '101 Pine Road', '', NULL, NULL, NULL, 0, NULL, NULL),
+(115, 'admin', 'admin@example.com', '09176861123', '0000-00-00', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, NULL, 0, NULL, NULL),
+(116, 'justine anne', 'justine1@gmail.com', '09176860040', '0000-00-00', '$2y$10$ZqWYiEiKpWT3NLooLy/UzuTLxubfvbkJbEFZfhXuhJ0c/yU8vCKWy', 'User', 100.00, '1724 Taft Avenue Pasay Cityyyy Ey ', 'uploads/293066135_768748097491834_8197535814127481849_n.jpg', 0, NULL, NULL, 0, NULL, NULL),
+(117, 'justine2', 'justine2@gmail.com', '09176860046', '0000-00-00', '$2y$10$elzJb1JNHMaxB6M6BWFiduO7EFmMGFxl3tvovKNmsYyuTwAEDOuJG', 'User', 100.00, 'manila', 'uploads/user.jpeg', NULL, NULL, NULL, 0, NULL, NULL),
+(118, 'justine3', 'justine3@gmail.com', '09176860046', '0000-00-00', '$2y$10$id/KB2vEO6Eh3BcogCF1Rea8RyNdveOXK5RGlpRJsvkzdfTRRcn5a', 'User', 100.00, 'manila', 'uploads/taylor.jpeg', 0, NULL, NULL, 0, NULL, NULL),
+(119, 'justine4', 'justine4@gmail.com', '09176860046', '0000-00-00', '$2y$10$p2sCHfPoIrcoKK/6QlwTuekaQvV4L8fEcNZ5EFGx3S/HaRJGYqzNW', 'User', 100.00, 'manila', 'uploads/user.jpeg', 0, NULL, NULL, 0, NULL, NULL),
+(120, 'anne', 'anne@gmail.com', '09176860046', '2002-08-24', '$2y$10$sb.eS9A0ZBwJWsnh1A7rSe91XiUjimUNd6jtUhudY0nvmEy8Gd4va', 'User', 100.00, 'manila', 'uploads/293066135_768748097491834_8197535814127481849_n.jpg', NULL, NULL, NULL, 0, NULL, NULL),
+(121, 'test1hihi', 'test1@gmail.com', '09176860047', '2024-07-26', '$2y$10$NKdI6w8Jt240m61RaG3g..os4zp5LdRClOJ.ekizzxAM50QI09SZG', 'User', 880.00, 'manila', 'uploads/user.jpeg', 0, NULL, NULL, 0, NULL, NULL),
+(122, 'Banker Joe', 'banker@mail.com', '09176566235', '2001-01-01', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, NULL, 0, NULL, NULL),
+(123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '2025-03-23', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', 0, NULL, 'e39bd2ee1f0bc932ff66aa722bad944c6627cf4104c22426e14962b5774b8574', 1, NULL, NULL);
 
 --
 -- Triggers `users`
@@ -621,32 +625,32 @@ DELIMITER ;
 --
 
 CREATE TABLE `users_audit` (
-  `audit_id` int NOT NULL,
+  `audit_id` int(11) NOT NULL,
   `audit_timestamp` datetime NOT NULL,
-  `activity` enum('C','U','D') COLLATE utf8mb4_general_ci NOT NULL,
-  `user_id` int NOT NULL,
-  `old_fullname` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_email` varchar(330) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_phoneNumber` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_role` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `activity` enum('C','U','D') NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `old_fullname` varchar(255) DEFAULT NULL,
+  `old_email` varchar(330) DEFAULT NULL,
+  `old_phoneNumber` varchar(255) DEFAULT NULL,
+  `old_password` varchar(255) DEFAULT NULL,
+  `old_role` varchar(255) DEFAULT NULL,
   `old_wallet` decimal(10,2) DEFAULT NULL,
-  `old_address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `old_login_attempts` int DEFAULT NULL,
-  `old_ban_time` int DEFAULT NULL,
-  `new_fullname` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_email` varchar(330) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_phoneNumber` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_role` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `old_address` varchar(255) DEFAULT NULL,
+  `old_picture` varchar(255) DEFAULT NULL,
+  `old_login_attempts` int(11) DEFAULT NULL,
+  `old_ban_time` int(11) DEFAULT NULL,
+  `new_fullname` varchar(255) DEFAULT NULL,
+  `new_email` varchar(330) DEFAULT NULL,
+  `new_phoneNumber` varchar(255) DEFAULT NULL,
+  `new_password` varchar(255) DEFAULT NULL,
+  `new_role` varchar(255) DEFAULT NULL,
   `new_wallet` decimal(10,2) DEFAULT NULL,
-  `new_address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_picture` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `new_login_attempts` int DEFAULT NULL,
-  `new_ban_time` int DEFAULT NULL,
-  `end_user` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `end_reason` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `new_address` varchar(255) DEFAULT NULL,
+  `new_picture` varchar(255) DEFAULT NULL,
+  `new_login_attempts` int(11) DEFAULT NULL,
+  `new_ban_time` int(11) DEFAULT NULL,
+  `end_user` varchar(255) DEFAULT NULL,
+  `end_reason` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -836,7 +840,54 @@ INSERT INTO `users_audit` (`audit_id`, `audit_timestamp`, `activity`, `user_id`,
 (179, '2024-07-16 23:51:04', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', NULL, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 1, NULL, 'System', 'Updated user details'),
 (180, '2024-07-16 23:51:04', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 1, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details'),
 (181, '2024-07-16 23:51:20', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 10000.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9820.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details'),
-(184, '2024-07-16 23:55:20', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9820.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details');
+(184, '2024-07-16 23:55:20', 'U', 122, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9820.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'Banker Joe', 'banker@mail.com', '09176566235', '$2y$10$OPLckX7Q2OL6VlG/zcocFOiMK5CnuQUYENbhQQgKTijY0dP8Cu4k6', 'User', 9640.00, '1411 taft', 'uploads/415919457_24688718220741925_2080994886690690471_n.jpg', 0, NULL, 'System', 'Updated user details'),
+(185, '2025-03-23 17:05:45', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$r0js1d23kjFV0TXFp6n0U.nZeAZI4MrZOoq1a28H/1.WDWF5fuFw2', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(186, '2025-03-23 17:06:53', 'C', 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$eYIis9PL/sWfRyIg/baILewdcBHEzEqPYi7AOuIeYl233o6Izn04G', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(187, '2025-03-23 17:08:24', 'C', 125, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$0614rOuVix2cVFEjCmHMKe1q5XNzDG/WfE/AaDJWm3wrzAEndlA3u', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(188, '2025-03-23 17:21:50', 'C', 126, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$F5/dUrEBLjPDzGwi.F9hQ.QzkkdXXEa9HVK.e9odoab4h9FYmvpMq', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(189, '2025-03-23 17:24:35', 'C', 127, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$D3N5DWlRpkubTnXmjdrN/el4H2X6LbWjx60lKkIBJOHHL5JOCIaJi', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(190, '2025-03-23 17:26:04', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'System', 'Updated user details'),
+(191, '2025-03-23 17:26:05', 'U', 115, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 1, NULL, 'admin', 'admin@example.com', '09176861123', '$2y$10$gjQFQEUu4iJsmzFnZxFvYuxvPVebXKmIaS9f2LYs8noSFAK1aRf6e', 'Administrator', 100.00, '1724 Taft Avenue Pasay City', '', 0, NULL, 'System', 'Updated user details'),
+(192, '2025-03-23 17:27:14', 'C', 128, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$28w7Q7fah6xQ11pU3tGgHe4M5jHmirwcl13GuoYJtzMxEoXbiyij2', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(193, '2025-03-23 17:33:46', 'C', 129, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$70Yatf.UGEmKx5KFAqGEXeG/DqBSnJ4YH.NQVBUADGtEWdcI7lIBe', 'User', 100000.00, 'ihef', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(194, '2025-03-23 17:47:15', 'C', 130, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$DW0d4sC.HClQeJR49qmUdelwW4rlMXzkMeL3QcUZAIHihEK6ZLLim', 'User', 100000.00, 'hello', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(195, '2025-03-23 17:49:35', 'C', 131, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$oXjaRk3dkeFJQVN9vihaq.DJwK6LkJQrKyk3i.BW0DNEHfqPVG6bm', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(196, '2025-03-23 19:00:49', 'C', 132, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$XcN50IMAZ.iFWFeaZkSmFeqbWxdXEZR4Lup3HWpSdOiFh5wWlv2le', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(197, '2025-03-23 19:01:55', 'C', 133, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$tXLUwdXLSd4VXeD2DfMpAusQ3Bq9ibTm1APLZ.QqS2jrcHXPArNNO', 'User', 100000.00, 'fef', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(198, '2025-03-23 19:12:51', 'D', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$r0js1d23kjFV0TXFp6n0U.nZeAZI4MrZOoq1a28H/1.WDWF5fuFw2', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(199, '2025-03-23 19:12:51', 'D', 124, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$eYIis9PL/sWfRyIg/baILewdcBHEzEqPYi7AOuIeYl233o6Izn04G', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(200, '2025-03-23 19:12:51', 'D', 125, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$0614rOuVix2cVFEjCmHMKe1q5XNzDG/WfE/AaDJWm3wrzAEndlA3u', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(201, '2025-03-23 19:12:51', 'D', 126, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$F5/dUrEBLjPDzGwi.F9hQ.QzkkdXXEa9HVK.e9odoab4h9FYmvpMq', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(202, '2025-03-23 19:12:51', 'D', 127, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$D3N5DWlRpkubTnXmjdrN/el4H2X6LbWjx60lKkIBJOHHL5JOCIaJi', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(203, '2025-03-23 19:12:51', 'D', 128, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$28w7Q7fah6xQ11pU3tGgHe4M5jHmirwcl13GuoYJtzMxEoXbiyij2', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(204, '2025-03-23 19:12:51', 'D', 129, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$70Yatf.UGEmKx5KFAqGEXeG/DqBSnJ4YH.NQVBUADGtEWdcI7lIBe', 'User', 100000.00, 'ihef', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(205, '2025-03-23 19:12:51', 'D', 130, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$DW0d4sC.HClQeJR49qmUdelwW4rlMXzkMeL3QcUZAIHihEK6ZLLim', 'User', 100000.00, 'hello', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(206, '2025-03-23 19:12:51', 'D', 131, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$oXjaRk3dkeFJQVN9vihaq.DJwK6LkJQrKyk3i.BW0DNEHfqPVG6bm', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(207, '2025-03-23 19:12:51', 'D', 132, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$XcN50IMAZ.iFWFeaZkSmFeqbWxdXEZR4Lup3HWpSdOiFh5wWlv2le', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(208, '2025-03-23 19:12:51', 'D', 133, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$tXLUwdXLSd4VXeD2DfMpAusQ3Bq9ibTm1APLZ.QqS2jrcHXPArNNO', 'User', 100000.00, 'fef', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(209, '2025-03-23 19:13:12', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$uY/UHZf8G15lo3X73lUw.OlR2ZKkmApFWqr.A4UezWLDm1auXuMou', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(210, '2025-03-23 19:14:56', 'C', 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$q1Yfe3Gt.0TMbVf.dXWsEOqgUdiIipNF5koatWox4.nJHO1mkepL.', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(211, '2025-03-23 19:19:40', 'D', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$uY/UHZf8G15lo3X73lUw.OlR2ZKkmApFWqr.A4UezWLDm1auXuMou', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(212, '2025-03-23 19:19:40', 'D', 124, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$q1Yfe3Gt.0TMbVf.dXWsEOqgUdiIipNF5koatWox4.nJHO1mkepL.', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(213, '2025-03-23 19:20:05', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$zaQ75djmA.nQ4sEvto9E8e15FHqvEhCucQTos14jdtgyehog2mU8y', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(214, '2025-03-23 19:20:26', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$zaQ75djmA.nQ4sEvto9E8e15FHqvEhCucQTos14jdtgyehog2mU8y', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$zaQ75djmA.nQ4sEvto9E8e15FHqvEhCucQTos14jdtgyehog2mU8y', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, 'System', 'Updated user details'),
+(215, '2025-03-23 19:25:51', 'C', 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$pX9nYWsvyx7.JenRlG.OWe11wU1ihzCkLQUTrLlZMW3.fpk4O5OTC', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(216, '2025-03-23 19:28:13', 'D', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$zaQ75djmA.nQ4sEvto9E8e15FHqvEhCucQTos14jdtgyehog2mU8y', 'User', 100000.00, 'ingrid', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(217, '2025-03-23 19:28:13', 'D', 124, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$pX9nYWsvyx7.JenRlG.OWe11wU1ihzCkLQUTrLlZMW3.fpk4O5OTC', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(218, '2025-03-23 19:30:46', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$qvpx2LmHv5Qy4ZhqRaf8ge/TV8Cch9kT.8Il9Guz1qluEY9KDWuJG', 'User', 100000.00, '1ee', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(219, '2025-03-23 19:31:04', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$qvpx2LmHv5Qy4ZhqRaf8ge/TV8Cch9kT.8Il9Guz1qluEY9KDWuJG', 'User', 100000.00, '1ee', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$qvpx2LmHv5Qy4ZhqRaf8ge/TV8Cch9kT.8Il9Guz1qluEY9KDWuJG', 'User', 100000.00, '1ee', 'uploads/1.jpg', NULL, NULL, 'System', 'Updated user details'),
+(220, '2025-03-23 19:36:08', 'C', 124, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$w2z2Lz2TQe6uNEVOdZbHTuQFujg6m8cKC/xkeySP6SoaVHi5vBmN6', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(221, '2025-03-23 19:38:07', 'D', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$qvpx2LmHv5Qy4ZhqRaf8ge/TV8Cch9kT.8Il9Guz1qluEY9KDWuJG', 'User', 100000.00, '1ee', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(222, '2025-03-23 19:38:07', 'D', 124, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$w2z2Lz2TQe6uNEVOdZbHTuQFujg6m8cKC/xkeySP6SoaVHi5vBmN6', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(223, '2025-03-23 19:38:30', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(224, '2025-03-23 19:38:48', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'System', 'Updated user details'),
+(225, '2025-03-23 19:40:11', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', 1, NULL, 'System', 'Updated user details'),
+(226, '2025-03-23 19:40:11', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', 1, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', 0, NULL, 'System', 'Updated user details'),
+(227, '2025-03-23 19:41:22', 'D', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$.F9g/thc3OzQ4SwUh9aR2O6w/cYAqZQlJxXpVBABTrwTijmwe2of.', 'User', 100000.00, '12456', 'uploads/1.jpg', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'System', 'Deleted user'),
+(228, '2025-03-23 19:41:40', 'C', 123, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'New user registered'),
+(229, '2025-03-23 19:41:57', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'System', 'Updated user details'),
+(230, '2025-03-23 19:42:06', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', NULL, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', 1, NULL, 'System', 'Updated user details'),
+(231, '2025-03-23 19:42:06', 'U', 123, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', 1, NULL, 'imc', 'ingridchen1026@gmail.com', '09162491246', '$2y$10$UY4V3q9UCSfspH/myGiJv.SD1HC5EFWFT2jHvrHohpAt.StM.b082', 'User', 100000.00, 'imc', 'uploads/1.jpg', 0, NULL, 'System', 'Updated user details');
 
 --
 -- Indexes for dumped tables
@@ -898,31 +949,31 @@ ALTER TABLE `users_audit`
 -- AUTO_INCREMENT for table `combo_meals_audit`
 --
 ALTER TABLE `combo_meals_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menu_items_audit`
 --
 ALTER TABLE `menu_items_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders_audit`
 --
 ALTER TABLE `orders_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `specials_audit`
 --
 ALTER TABLE `specials_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users_audit`
 --
 ALTER TABLE `users_audit`
-  MODIFY `audit_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `audit_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=232;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

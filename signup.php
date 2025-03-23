@@ -2,6 +2,11 @@
 // Include database connection
 include 'db_connection.php';
 include 'navbar.php';
+require 'vendor/autoload.php'; // Composer PHPMailer
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 session_start(); // Start session
 
 $message = ""; // Initialize the message variable
@@ -86,101 +91,94 @@ function logSignupAction($userId, $fullname, $wallet) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fullname = $_POST['fullname'];
+    $fullname = $_POST['fullname']; 
     $email = $_POST['email'];
     $birthday = $_POST['birthday']; 
     $password = $_POST['password'];
-    $phoneNumber = $_POST['phoneNumber']; // Get phone number
-    $role = 'User'; // Default role for signed up users
-    $address = isset($_POST['address']) ? $_POST['address'] : null; // Get address if provided
-    $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : 0.00; // Get wallet balance if provided
-    $picture = null; // Initialize picture variable
-    
-    $uploadOk = 0; // Flag to check upload success
+    $phoneNumber = $_POST['phoneNumber'];
+    $role = 'User';
+    $address = $_POST['address'] ?? null;
+    $wallet = $_POST['wallet'] ?? 0.00;
+    $picture = null; 
+
+    $uploadOk = 0; 
     $targetDir = "uploads/";
-    $targetFile = $targetDir.basename($_FILES['profile']['name']);
-    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-    
-    // Check if the uploaded file is an image
-    
-    if (isset($_FILES['profile']) && $_FILES['profile']['error'] == UPLOAD_ERR_OK) {
-        $check = getimagesize($_FILES['profile']['tmp_name']);
-        if ($check !== false) {
-                $uploadOk = 1;
+
+    if (!empty($_FILES['profile']['name'])) {
+        $targetFile = $targetDir . basename($_FILES['profile']['name']);
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+        if (getimagesize($_FILES['profile']['tmp_name']) !== false) {
+            $uploadOk = 1;
         } else {
             $message = "File is not an image.";
-            $uploadOk = 0;
         }
-        
-        // Check file size (e.g., limit to 5MB)
+
         if ($_FILES['profile']['size'] > 5000000) {
-            $message = "Your Image is too large.";
+            $message = "Your image is too large.";
             $uploadOk = 0;
         }
 
-        // Allow certain file formats
-        $allowedFileTypes = ['jpg', 'jpeg', 'png'];
-        if (!in_array($imageFileType, $allowedFileTypes)) {
+        if (!in_array($imageFileType, ['jpg', 'jpeg', 'png'])) {
             $message = "Only JPG, JPEG, and PNG files are allowed.";
             $uploadOk = 0;
         }
-        
-        // Check if $uploadOk is set to 0 by an error
+
         if ($uploadOk == 1) {
             if (move_uploaded_file($_FILES['profile']['tmp_name'], $targetFile)) {
-                $picture = $targetFile; // Set $picture to the path of the uploaded file
+                $picture = $targetFile;
             } else {
-                $message = "Sorry, there was an error uploading your file.";
+                $message = "Error uploading file.";
             }
         }
-    } else {
-        $message = "No file uploaded or upload error.";
-        
     }
 
-    // Validate email and phone number
     if (!isValidEmail($email)) {
-        if (!isValidPhoneNumber($phoneNumber)) {
-            $message = "Invalid email and phone number.";
-        } else {
-            $message = "Invalid email address. Please enter a valid email.";
-        } 
+        $message = !isValidPhoneNumber($phoneNumber) ? "Invalid email and phone number." : "Invalid email address.";
     } elseif (!isValidPhoneNumber($phoneNumber)) {
-        $message = "Invalid phone number. Please enter a valid phone number.";
+        $message = "Invalid phone number.";
     } else {
-        // Ensures the password is not empty
-        if (!empty($password)) {
-            if($uploadOk == 1){
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $verification_token = bin2hex(random_bytes(32));
+        $mfa_code = mt_rand(100000, 999999);
+        $otp_expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
 
-            // Insert user data into the database with hashed password
-            $sql = "INSERT INTO users (fullname, email, phoneNumber, birthday, password, role, wallet, address, picture)
-                    VALUES ('$fullname', '$email', '$phoneNumber', '$birthday','$hashed_password', '$role', $wallet, '$address', '$picture')";
+        $sql = "INSERT INTO users (fullname, email, phoneNumber, birthday, password, role, wallet, address, picture, verification_token, verified, otp, otp_expiry) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssssdsssss", $fullname, $email, $phoneNumber, $birthday, $hashed_password, $role, $wallet, $address, $picture, $verification_token, $mfa_code, $otp_expiry);
 
-            $result = mysqli_query($conn, $sql);
+        if ($stmt->execute()) {
+            $_SESSION['pending_email'] = $email;
 
-            if ($result) {
-                $userId = mysqli_insert_id($conn); // Get the ID of the inserted user
-                logSignupAction($userId, $fullname, $wallet); // Log signup action
+            // Send OTP email
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = "lunarmoonzpt@gmail.com"; 
+                $mail->Password = "efcd qrbo lbzj jgqe"; 
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
 
-                $message = "Welcome, $fullname! Registration successful. Redirecting...";
-                // Set session variables after successful registration
-                $_SESSION['email'] = $email;
-                $_SESSION['fullname'] = $fullname;
-                $_SESSION['role'] = $role;
-        
-                // Redirect to index.php after 4 seconds
-                echo '<meta http-equiv="refresh" content="4;url=index.php">';
-            } else {
-                $message = "Error: " . mysqli_error($conn);
+                $mail->setFrom("lunarmoonzpt@gmail.com", "Kape-Kada Coffee Shop");
+                $mail->addAddress($email, $fullname);
+                $mail->isHTML(true);
+                $mail->Subject = 'Your MFA Code for Kape-Kada Coffee Shop';
+                $mail->Body = "Hello $fullname, <br>Your MFA code is: <b>$mfa_code</b>. This code will expire in 10 minutes.";
+                $mail->send();
+
+                $_SESSION['pending_email'] = $email;
+                $message = "Redirecting to OTP Verification...";
+                echo '<meta http-equiv="refresh" content="4;url=verify_mfa.php">';
+            } catch (Exception $e) {
+                $message = "Email could not be sent. Error: {$mail->ErrorInfo}";
             }
-            // Hash the password with salted rounds
-            
         } else {
-            $message = "Please fill in all credentials.";
+            $message = "Error: " . $stmt->error;
         }
     }
-}
 }
 ?>
 
